@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SetLoader } from "../../redux/loadersSlice";
 import { message } from "antd";
 import { format } from 'date-fns';
-
+import Images from "./Images"
 // Tab Panel
 const TabPanel = ({ children, value, index }) => (
   <div hidden={value !== index} role="tabpanel">
@@ -20,7 +20,8 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
   const handlePrev = () => {
     setActiveTab((prevTab) => prevTab - 1);
   };
-  
+  const [imageTabEnabled, setIamgeTabEnabled] = useState(false);
+
   const [formData, setFormData] = useState({
       projectName: "", 
       projectType: "", 
@@ -190,6 +191,7 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
         ...selectedCredit
       }));
       setActiveTab(0);
+      setIamgeTabEnabled(true); // Enable the image tab when in edit mode
     }
   }, [selectedCredit, editMode]);
   return (
@@ -209,7 +211,7 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
           <Tab label="Project Information" />
           <Tab label="Emission Information" />
           <Tab label="Trees and Solar Panels" />
-          {/* <Tab label="Images" /> */}
+          {imageTabEnabled &&  <Tab label="Images" /> }
         </Tabs>
         <TabPanel value={activeTab} index={0}>
           {/* Content for Project Information tab */}
@@ -264,6 +266,9 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
           </div>
           <Button onClick={handlePrev}>Prev</Button>
           <Button onClick={handleSubmit}>Submit</Button>
+        </TabPanel>
+        <TabPanel value={activeTab} index={3}>
+           <Images selectedCredit={selectedCredit} getData={getData} setShowCreditsForm={setShowCreditsForm} />
         </TabPanel>
         </form>
         </div>
