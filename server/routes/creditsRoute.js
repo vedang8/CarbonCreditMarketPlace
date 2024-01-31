@@ -2,9 +2,9 @@ const router = require('express').Router();
 const CreditForm = require('../models/creditForm');
 const authenticate = require('../middleware/authenticate');
 const genform = require('../models/creditForm')
-
+const { cloudinary_js_config } = require("../db/cloudinaryConn");
 const { ObjectId } = require('mongoose').Types;
-
+const multer = require("multer");
 // create a new credit generation form
 router.post("/credit-forms", authenticate, async (req,res) => {
     const user = req.rootUser; // Assuming you have a valid user object in req.rootUser
@@ -97,6 +97,35 @@ router.get("/credit-forms/:id", async(req,res) => {
         success: false,
         message: error.message,
        });
+    }
+});
+
+// get image from pc
+const storage = multer.diskStorage({
+    filename: function (req, file, callback) {
+      callback(null, Date.now() + file.originalname); // use the original filename
+    },
+});
+
+// handle image upload to cloudinary
+const upload = multer({storage: storage});
+router.post('/upload-image-to-form', authenticate, upload.single('file'), async(req, res) => {
+    try{
+       const result = await cloudinary.uploader.upload(req.file.path);
+       const creditId = req.body.creditId;
+       await CreditForm.findByIdAndUpdate(creditId, {
+        $push: { images: result.secure_url },
+       });
+       res.send({
+        success: true,
+        message: "Image uploaded successfully",
+        result,
+       });
+    }catch(error){
+        res.send({
+            success: false,
+            message: error.message,
+        });
     }
 });
 
