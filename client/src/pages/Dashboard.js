@@ -6,12 +6,17 @@ import { SetLoader } from '../redux/loadersSlice';
 import { SetUser } from '../redux/usersSlice';
 import Home from './Home';
 import Profile from './Profile';
+import Admin from './Admin/index';
+import {message} from 'antd';
+
 const Dashboard = () => {
     
     const {logindata, setLoginData} = useContext(LoginContext);
   //  const { user } = useSelector((state)=> state.users);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.users);
+    
     const DashboardValid = async () => {
         dispatch(SetLoader(true));
         let token = localStorage.getItem("usersdatatoken");
@@ -24,7 +29,7 @@ const Dashboard = () => {
             }
         });
         const data = await res.json();
-        console.log("user data", data)
+        console.log("user data", data.ValidUserOne)
         dispatch(SetLoader(false));
         if(data.status === 401 || !data){
            navigate("*")
@@ -58,6 +63,7 @@ const Dashboard = () => {
             console.log("user loggout ");
             localStorage.removeItem("usersdatatoken");
             setLoginData(false);
+            message.success("Logged out Successfully");
             navigate("/login");
         }
     }
@@ -67,12 +73,19 @@ const Dashboard = () => {
     return (
             <div>
                 <div className="flex justify-between items-center bg-primary p-5">
-                    <h1 className="text-2xl text-white">
+                    <h1 className="text-2xl text-white cursor-pointer" onClick={() => navigate("/home")}>
                         CARBON CREDIT MARKET PLACE
                     </h1>
                     <div className="bg-white py-2 px-5 rounded flex gap-1 items-center">
                         <i className="ri-shield-user-line"></i>
-                        <span className="underline cursor-pointer" onClick={()=>navigate("/profile")}>
+                        <span className="underline cursor-pointer" 
+                          onClick={()=> {
+                            if(user?.ValidUserOne?.role === "user"){
+                               navigate("/profile"); 
+                            }else{
+                               navigate("/admin"); 
+                            }
+                          }}>
                         {logindata ? logindata.ValidUserOne.fname.toUpperCase() : ""}
                         </span>
                         <i className="ri-logout-box-r-line ml-10 cursor-pointer"
@@ -83,6 +96,7 @@ const Dashboard = () => {
                     <Route>
                         <Route path="/home" element={<Home />}/>
                         <Route path="/profile" element={<Profile />}/>
+                        <Route path="/admin" element={<Admin />}/>
                     </Route>
                 </Routes>             
             </div>

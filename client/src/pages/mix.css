@@ -23,13 +23,13 @@ section .form_data{
 
 .form_data h1{
     font-size: 34px;
-    color: #2a4365;
+    color: #3e6c02;;
 }
 
 .form_data p{
-    color: #718096;
+    color: #3e6c02;
     font-size: 15px;
-    margin-top:9px;
+    margin-top: 19px;
 }
 
 .form_data form{
@@ -62,7 +62,7 @@ section .form_data{
 }
 
 .form_data form .form_input input:focus{
-    border:2px solid rgba(66, 153, 225,0.6);
+    border:2px solid rgba(2, 90, 24, 0.6);
 }
 
 
@@ -81,7 +81,7 @@ section .form_data{
     margin-top: 12px;
     font-size: 14px;
     font-weight: 600;
-    color: #2a4365;
+    color: #3e6c02;
     background-color: #EDF2F7;
     border-radius: 5px;
     cursor: pointer;
@@ -94,7 +94,7 @@ form .btn{
     border: none;
     outline: none;
     border-radius: 5px;
-    background-color:#1a365d;
+    background-color:#3e6c02;
     color: #fff;
     font-weight: 600;
     font-size: 18px;
@@ -105,7 +105,8 @@ form .btn{
 
 
 form .btn:hover{
-    background-color: #97a1b1;
+    background-color: #57ec32;   
+    color:#3e6c02;
 }
 
 .form_data form p{

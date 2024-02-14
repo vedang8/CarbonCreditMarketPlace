@@ -97,10 +97,10 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
           !formData.numOfSolarPanels ||
           !formData.electricity
         ) {
-          alert("Please fill all the fields of the form");
+          message.error("Please fill all the fields of the form");
           return;
         }else if(formData.startDate > formData.endDate){
-          alert("Please mention the proper Start Date and End Date");
+          message.error("Please mention the proper Start Date and End Date");
           return;
         }
         
@@ -134,7 +134,7 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
             setShowCreditsForm(false);
            }else{
             console.error('Error updating the form');
-            alert('Error updating the form. Please try again.');
+            message.error('Error updating the form. Please try again.');
            }  
         }else{
           // Send a POST request to the backend
@@ -154,17 +154,14 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
             console.log(data); 
             setFormData({...formData, description: "", startDate: "", endDate: "", projectName: "", projectType: "", projectEmissionAmount: "",
                           baselineEmissionAmount: "", numOfTrees: "", numOfSolarPanels: "", electricity: "", status: "", images: []});
-            getData();
+            await getData();
             message.success(data.message);
             setShowCreditsForm(false);
             //alert('Form submitted successfully')// Close the form after successful submission
           } else {
-            console.error('Error submitting the form');
-            alert('Error submitting the form. Please try again.');
+            message.error('Error submitting the form. Please try again.');
             }
-        }
-        
-        
+        }  
       } catch (error) {
         dispatch(SetLoader(false));
         console.error('Error:', error);

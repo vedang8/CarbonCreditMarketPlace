@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import CreditsForm from "./CreditsForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { message, Table } from "antd";
 import { SetLoader } from "../../redux/loadersSlice";
 
@@ -10,57 +10,60 @@ function Credits() {
   const [creditsForm, setCreditsForm] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
+  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
-  
+
   const handleGenerateClick = () => {
     setSelectedCredit(null);
     setShowCreditsForm(true);
     setEditMode(false);
   };
-  
+
   const handleEditClick = (record) => {
-    console.log('Before setSelectedCredit:', selectedCredit);
+    console.log("Before setSelectedCredit:", selectedCredit);
     setSelectedCredit(record);
-    console.log('After setSelectedCredit:', selectedCredit);
+    console.log("After setSelectedCredit:", selectedCredit);
     setShowCreditsForm(true);
     setEditMode(true);
     setDeleteMode(false);
-  }
+  };
 
-  const handleDeleteClick = async(record) => {
-    console.log('Delete icon clicked');
-    if(window.confirm("Are you sure you want to delete this form?")){
-      try{
+  const handleDeleteClick = async (record) => {
+    console.log("Delete icon clicked");
+    if (
+      record &&
+      record._id &&
+      window.confirm("Are you sure you want to delete this form?")
+    ) {
+      try {
         dispatch(SetLoader(true));
 
         const token = localStorage.getItem("usersdatatoken");
-        //console.log('Delete request URL:', `/delete-credit-forms/${record._id}`);
         const res = await fetch(`/delete-credit-forms/${record._id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": token,
+            Authorization: token,
           },
         });
 
         dispatch(SetLoader(false));
-        console.log('Delete response:', res);
-        if(res.ok){
+        console.log("Delete response:", res);
+        if (res.ok) {
           const data = await res.json();
           console.log(data);
           message.success(data.message);
           getData();
-        }
-        else{
+        } else {
           console.error("Error deleting form");
         }
-      }catch(error){
+      } catch (error) {
         dispatch(SetLoader(false));
         console.error("Errro", error);
         message.error(error.message);
       }
     }
-  }
+  };
   const columns = [
     {
       title: "Project Name",
@@ -106,42 +109,67 @@ function Credits() {
       title: "Action",
       dataIndex: "action",
       render: (text, record) => {
-        return <div className="flex gap-5">
-          <i className="ri-delete-bin-line" onClick={() => {handleDeleteClick(record)}}></i>
-          <i className="ri-pencil-line" onClick={() => {handleEditClick(record)}}></i>
-        </div>
-      }
+        return (
+          <div className="flex gap-5">
+            <i
+              className="ri-delete-bin-line"
+              onClick={() => {
+                handleDeleteClick(record);
+              }}
+            ></i>
+            <i
+              className="ri-pencil-line"
+              onClick={() => {
+                handleEditClick(record);
+              }}
+            ></i>
+          </div>
+        );
+      },
     },
-  ]
+  ];
 
-  const getData = async() => {
-    try{
-     dispatch(SetLoader(true));
-     const response = await fetch("/get-credit-forms");
-     dispatch(SetLoader(false));
-     if(response.ok){
-      const data = await response.json();
-      console.log(data);
-      setCreditsForm(data.forms);
-     }
-    }catch(error){
+  const getData = async () => {
+    try {
+      dispatch(SetLoader(true));
+      console.log("inside the get data function : ", user.ValidUserOne._id)
+
+      const response = await fetch(
+        `/get-credit-forms`
+      );
       dispatch(SetLoader(false));
-      message.error(error.message)
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setCreditsForm(data.forms);
+      }
+    } catch (error) {
+      dispatch(SetLoader(false));
+      message.error(error.message);
     }
-  }
-  
+  };
+
+  console.log(user);
   useEffect(() => {
     getData();
   }, []);
   return (
-     <div>
+    <div>
       <div className="mb-2">
-          <button className="btn" onClick={handleGenerateClick}>
+        <button className="btn" onClick={handleGenerateClick}>
           Generate
-          </button>
+        </button>
       </div>
-          <Table columns={columns} dataSource={creditsForm} />
-          {showCreditsForm && <CreditsForm  setShowCreditsForm={setShowCreditsForm} selectedCredit={selectedCredit} getData={getData} editMode={editMode} handleDeleteClick={handleDeleteClick}/>}
+      <Table columns={columns} dataSource={creditsForm} />
+      {showCreditsForm && (
+        <CreditsForm
+          setShowCreditsForm={setShowCreditsForm}
+          selectedCredit={selectedCredit}
+          getData={getData}
+          editMode={editMode}
+          handleDeleteClick={handleDeleteClick}
+        />
+      )}
     </div>
   );
 }

@@ -8,7 +8,6 @@ const store = configureStore({
         loaders: loadersSlice.reducer,
         users: usersSlice.reducer,
     },
-    
 });
 
 export default store;

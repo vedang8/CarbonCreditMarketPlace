@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { SetLoader } from '../redux/loadersSlice';
+import { message } from 'antd';
 // import {ToastContainer, toast} from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 
@@ -37,25 +38,21 @@ const Register = () => {
         const {fname, email, password, cpassword} = inpval;
 
         if(fname === ""){
-            // toast.warning("fname is required!", {
-            //     position: "top-center"
-            // });
+            message.error("Username is required"); 
         }else if(email === ""){
-            // toast.error("email is required!", {
-            //     position: "top-center"
-            // });
+            message.error("Email is required");
         }else if(!email.includes("@gmail.com")){
-           alert("please enter valid email");
+            message.error("Please enter valid email");
         }else if(password === ""){
-            alert("enter your password");
+            message.error("Enter your Password");
         }else if(password.length < 6){
-            alert("password must be 6 char");
+            message.error("Password must be 6 char");
         }else if(cpassword === ""){
-            alert("enter your confirm password");
+            message.error("Enter your confirm password");
         }else if(cpassword.length < 6){
-            alert("confirm password must be 6 char");
+            message.error("Confirm Password must be 6 char");
         }else if(password !== cpassword){
-            alert("password and cofirm password must be same");
+            message.error("Password and Confirm Password must be same");
         }else{
             dispatch(SetLoader(true));
             // console.log("user registration done");
@@ -72,9 +69,10 @@ const Register = () => {
             dispatch(SetLoader(false));
             //console.log(res);
             if(res.status === 201){
-                alert("User registartion done");
+                message.success("Congratulations!!! You are registered");
+                message.success("Please Login with your credentials");
                 setInpval({...inpval, fname:"", email:"", password:"", cpassword:""});
-                navigate("/");
+                navigate("/login");
             }
         }
 
@@ -115,7 +113,7 @@ const Register = () => {
                         </div>
                     </div>
                     <button className='btn' onClick={addUserdata}>Sign Up</button>
-                    <p>Already have an Account? <NavLink to="/">Login</NavLink></p>
+                    <p>Already have an Account? <NavLink to="/login">Login</NavLink></p>
                 </form>
             </div>
         </section>

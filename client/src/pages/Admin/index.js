@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Credits from './CarbonCredits/Credits'
+import Credits from './Credits'
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,7 +55,7 @@ const StyledTab = (props) => (
 );
 
 
-export default function Profile() {
+export default function Admin() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -72,9 +72,9 @@ export default function Profile() {
             aria-label="basic tabs example"
             TabIndicatorProps={{ style: { backgroundColor: 'green' } }}
           >
-            <StyledTab label="Carbon Credits" {...a11yProps(0)} $isSelected={value === 0} />
-            <StyledTab label="Bids" {...a11yProps(1)} $isSelected={value === 1} />
-            <StyledTab label="General" {...a11yProps(2)} $isSelected={value === 2} />
+            <StyledTab label="Credit Forms" {...a11yProps(0)} $isSelected={value === 0} />
+            <StyledTab label="Users" {...a11yProps(1)} $isSelected={value === 1} />
+     
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -83,9 +83,6 @@ export default function Profile() {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           Item Two
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-          Item Three
         </CustomTabPanel>
       </Box>
     </ThemeProvider>

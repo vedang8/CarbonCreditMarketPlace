@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Upload, message } from 'antd';
 import { useDispatch } from "react-redux";
 import { SetLoader } from '../../redux/loadersSlice';
+
 function Images({
     selectedCredit,
     setShowCreditsForm,
@@ -9,11 +10,37 @@ function Images({
 }) {
   const [file=null, setFile] = useState(null);
   const dispatch = useDispatch();
-  const upload = () => {
+  const upload = async () => {
     try{
+      console.log('File:', file);
+        
+      if(!file){
+        message.error('Please select an image to upload.');
+        return;
+      }
       dispatch(SetLoader(true)); 
-      // Upload Image to cloudinary 
       
+      // Upload Image to cloudinary 
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("creditId", selectedCredit._id);
+      
+      const token = localStorage.getItem("usersdatatoken");
+      const res = await fetch("/upload-image-to-form", {
+        method: "POST",
+        headers: {
+          "Authorization": token,
+        },
+        body: formData,
+      });
+      const data = await res.json();
+      if(data.success){
+        message.success(data.message);
+        getData();
+        setShowCreditsForm(false);
+      }else{
+        message.error(data.message);
+      }
     }catch(error){
       dispatch(SetLoader(false)); 
       message.error(error.message);
@@ -33,13 +60,8 @@ function Images({
             </Button>
         </div>
     </div>
-    
-//     <div className="form_input">
-//     <label htmlFor="images">Upload Images</label>
-//     <input type="file" multiple name="images" id="images" />
-//   </div>
-
   )
 }
 
 export default Images;
+

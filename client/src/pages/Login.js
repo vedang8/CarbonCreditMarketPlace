@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import "./mix.css"
 import { useDispatch } from 'react-redux';
 import { SetLoader } from '../redux/loadersSlice';
-
+import { message } from 'antd';
 const Login = () => {
 
     const [passShow, setPassShow] = useState(false);
@@ -16,7 +16,7 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const setVal = (e) =>{
-        //console.log(e.target.value);
+        
         const {name, value} = e.target;
         setInpval(()=>{
             return{
@@ -32,13 +32,13 @@ const Login = () => {
         const {email, password} = inpval;
         
         if(email === ""){
-           alert("please enter your email"); 
+            message.error("Please enter your email"); 
         }else if(!email.includes("@gmail.com")){
-           alert("please enter valid email");
+            message.error("Please enter valid email");
         }else if(password === ""){
-            alert("enter your password");
+            message.error("Enter your password");
         }else if(password.length < 6){
-            alert("password must be 6 char");
+            message.error("Password must be 6 char");
         }else{
             dispatch(SetLoader(true));
            // console.log("user logged done");
@@ -56,8 +56,11 @@ const Login = () => {
             console.log(res);
             if(res.status === 201){
                 localStorage.setItem("usersdatatoken", res.result.token)
+                message.success("Welcome to CARBON CREDIT MARKETPLACE");
                 navigate("/home");
                 setInpval({...inpval, email:"", password:""});
+            }else{
+                message.error("Invalid Details");
             }
         }
     }
