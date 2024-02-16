@@ -26,44 +26,50 @@ const Login = () => {
         });
     };
     
-    const loginuser = async (e) =>{
-        
+    
+    const loginuser = async (e) => {
         e.preventDefault();
-        const {email, password} = inpval;
-        
-        if(email === ""){
-            message.error("Please enter your email"); 
-        }else if(!email.includes("@gmail.com")){
-            message.error("Please enter valid email");
-        }else if(password === ""){
+        const { email, password } = inpval;
+    
+        if (email === "") {
+            message.error("Please enter your email");
+        } else if (!email.includes("@gmail.com")) {
+            message.error("Please enter a valid email");
+        } else if (password === "") {
             message.error("Enter your password");
-        }else if(password.length < 6){
-            message.error("Password must be 6 char");
-        }else{
+        } else if (password.length < 6) {
+            message.error("Password must be at least 6 characters");
+        } else {
             dispatch(SetLoader(true));
-           // console.log("user logged done");
-            const data = await fetch("/login",{
-                method: "POST",
-                headers:{
-                   "Content-Type":"application/json"
-                },
-                body: JSON.stringify({
-                    email, password
-                })
-            });
-            const res = await data.json();
-            dispatch(SetLoader(false));
-            console.log(res);
-            if(res.status === 201){
-                localStorage.setItem("usersdatatoken", res.result.token)
-                message.success("Welcome to CARBON CREDIT MARKETPLACE");
-                navigate("/home");
-                setInpval({...inpval, email:"", password:""});
-            }else{
-                message.error("Invalid Details");
+            try {
+                const data = await fetch("/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                const res = await data.json();
+                dispatch(SetLoader(false));
+                console.log(res);
+                if (res.status === 201) {
+                    localStorage.setItem("usersdatatoken", res.result.token);
+                    message.success("Welcome to CARBON CREDIT MARKETPLACE");
+                    navigate("/home");
+                    setInpval({ ...inpval, email: "", password: "" });
+                } else if (res.error === "User account is blocked") {
+                    message.error("Your account is blocked!!!");
+                } else {
+                    message.error("Invalid Details");
+                }
+            } catch (error) {
+                dispatch(SetLoader(false));
+                message.error("An error occurred. Please try again later.");
+                console.error("Login error:", error);
             }
         }
-    }
+    };
+    
     return (
     <>
         <section>

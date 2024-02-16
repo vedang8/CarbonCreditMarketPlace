@@ -41,43 +41,94 @@ router.post("/register", async(req, res) =>{
 });
 
 // user login
-router.post("/login", async(req,res)=>{
-    //console.log(req.body);
-    const {email, password} = req.body;    
-    if(!email || !password){
-        res.status(422).json({error: "fill all the details"})
+// router.post("/login", async(req,res)=>{
+//     //console.log(req.body);
+//     const {email, password} = req.body;    
+//     if(!email || !password){
+//         res.status(422).json({error: "fill all the details"})
+//     }
+
+//     try{
+//         // check if user exists
+//         const userValid = await userdb.findOne({email:email});
+        
+//         //if user is active
+//         if(!userValid){
+//             throw new Error("Invalid details");
+//         }
+//         if (userValid.status === "blocked") {
+//             res.status(422).json({error: "blocked"})
+//         }
+       
+            
+//             const isMatch = await bcrypt.compare(password, userValid.password);
+
+//             if(!isMatch){
+//                 res.status(422).json({error: "invalid details"})
+//             }else{
+//                 // token generation
+//                 const token = await userValid.generateAuthtoken();
+
+//                 // cookie generation
+//                 res.cookie("usercookie", token,{
+//                     expires: new Date(Date.now() + 9000000),
+//                     httpOnly: true
+//                 });
+
+//                 const result = {
+//                     userValid,
+//                     token
+//                 }
+//                 res.status(201).json({status:201, result})
+//             }
+        
+//     }catch(error){
+//         res.status(401).json(error);
+//         console.log("catch block");
+//     }
+// });
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(422).json({ error: "Fill in all the details" });
     }
 
-    try{
-        // check if user exists
-        const userValid = await userdb.findOne({email:email});
-        if(userValid){
-            const isMatch = await bcrypt.compare(password, userValid.password);
+    try {
+        const userValid = await userdb.findOne({ email });
 
-            if(!isMatch){
-                res.status(422).json({error: "invalid details"})
-            }else{
-                // token generation
-                const token = await userValid.generateAuthtoken();
-
-                // cookie generation
-                res.cookie("usercookie", token,{
-                    expires: new Date(Date.now() + 9000000),
-                    httpOnly: true
-                });
-
-                const result = {
-                    userValid,
-                    token
-                }
-                res.status(201).json({status:201, result})
-            }
+        if (!userValid) {
+            throw new Error("Invalid details");
         }
-    }catch(error){
-        res.status(401).json(error);
-        console.log("catch block");
+
+        if (userValid.status === "blocked") {
+            return res.status(422).json({ error: "User account is blocked" });
+        }
+
+        const isMatch = await bcrypt.compare(password, userValid.password);
+
+        if (!isMatch) {
+            return res.status(422).json({ error: "Invalid details" });
+        }
+
+        const token = await userValid.generateAuthtoken();
+
+        res.cookie("usercookie", token, {
+            expires: new Date(Date.now() + 9000000),
+            httpOnly: true
+        });
+
+        const result = {
+            userValid,
+            token
+        };
+
+        return res.status(201).json({ status: 201, result });
+    } catch (error) {
+        console.error("Login error:", error);
+        return res.status(500).json({ error: "Internal server error" });
     }
-})
+});
 
 // user valid
 router.get("/validuser", authenticate, async(req,res)=>{
@@ -87,7 +138,7 @@ router.get("/validuser", authenticate, async(req,res)=>{
     } catch (error) {
         res.status(401).json({status:401,error});
     }
-})
+});
 
 // user logout
 router.get("/logout", authenticate, async(req,res) =>{
@@ -105,6 +156,41 @@ router.get("/logout", authenticate, async(req,res) =>{
     } catch (error) {
         res.status(401).json({status:401,error})
     }
-})
+});
+
+// get all users
+router.get("/get-users", authenticate, async(req, res) => {
+    try{
+      const users = await userdb.find();
+      res.send({
+        success: true,
+        message: "Users fetched successfully",
+        data: users,
+      });
+    }catch(error){
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
+});
+
+// update user status
+router.put("/update-user-status/:id", authenticate, async(req, res) => {
+    try{
+       const { status } = req.body; 
+       await userdb.findByIdAndUpdate(req.params.id, { status });
+       res.send({
+        success: true,
+        message: "User status updated successfully",
+       })
+    }catch(error){
+       res.send({
+        success: false,
+        message: error.message,
+       });
+    }
+});
+
 module.exports = router;
 

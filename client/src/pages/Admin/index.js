@@ -5,7 +5,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Credits from './Credits'
+import Credits from './Credits';
+import Users from './Users';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -82,7 +83,7 @@ export default function Admin() {
           < Credits />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          Item Two
+          < Users />
         </CustomTabPanel>
       </Box>
     </ThemeProvider>
