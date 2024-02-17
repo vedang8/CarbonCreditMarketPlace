@@ -43,7 +43,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  
+  credits: {
+    type: Number,
+    default: 0,
+  },
   tokens: [
     {
       token: {
