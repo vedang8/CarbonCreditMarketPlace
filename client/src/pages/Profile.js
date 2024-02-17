@@ -72,9 +72,9 @@ export default function Profile() {
             aria-label="basic tabs example"
             TabIndicatorProps={{ style: { backgroundColor: 'green' } }}
           >
-            <StyledTab label="Carbon Credits" {...a11yProps(0)} $isSelected={value === 0} />
+            <StyledTab label="My Forms" {...a11yProps(0)} $isSelected={value === 0} />
             <StyledTab label="Bids" {...a11yProps(1)} $isSelected={value === 1} />
-            <StyledTab label="General" {...a11yProps(2)} $isSelected={value === 2} />
+            <StyledTab label="Credits" {...a11yProps(2)} $isSelected={value === 2} />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>

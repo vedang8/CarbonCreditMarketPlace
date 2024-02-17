@@ -95,27 +95,70 @@ router.delete("/delete-credit-forms/:id", authenticate, async (req, res) => {
 });
 
 // get a specific credit generation form by ID
-router.get("/get-credit-forms/:id", async (req, res) => {
+router.get("/get-credit-forms/user/:userId", async (req, res) => {
   try {
-    // Assuming userId is an ObjectId field in your CreditForm schema
-    const userId = mongoose.Types.ObjectId(req.params.id);
+    const userId = req.params.userId;
 
-    const form = await genform.find().sort({ createdAt: -1 });
-    if (form.length === 0) {
+    // Fetch forms associated with the specified user ID
+    const forms = await genform.find({ user: userId }).sort({ createdAt: -1 });
+
+    // Check if any forms were found
+    if (!forms || forms.length === 0) {
       return res.send({
         success: false,
         message: "No credit forms found for the specified user ID.",
       });
     }
-    console.log("forms", form);
+
+    // Return the found forms
+    console.log("forms", forms);
+    res.send({
+      success: true,
+      data: forms,
+    });
+  } catch (error) {
+    console.error("Error in fetching credit forms: ", error);
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// get a specific credit generation form by ID
+router.get("/get-credit-forms/:id", async (req, res) => {
+  try {
+    const formId = req.params.id;
+    console.log("get iiii");
+    console.log("formid", formId);
+
+    // Check if the provided ID is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(formId)) {
+      return res.send({
+        success: false,
+        message: "Invalid form ID format",
+      });
+    }
+    
+    // Find the form by ID
+    const form = await CreditForm.findById(formId).populate("user", "fname");
+    console.log("form", form);
+    if (!form) {
+      return res.send({
+        success: false,
+        message: "Form not found",
+      });
+    }
+    
     res.send({
       success: true,
       data: form,
     });
   } catch (error) {
+    console.error("Error in fetching credit form by ID: ", error);
     res.send({
       success: false,
-      message: error.message,
+      message: "Internal server error",
     });
   }
 });
