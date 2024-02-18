@@ -8,6 +8,9 @@ const multer = require("multer");
 const fs = require("fs");
 const mongoose = require("mongoose");
 const { uploadImageCloudinary } = require("../db/uploadClodinary");
+const userdb = require("../models/user");
+const creditdb = require("../models/credits");
+const { serialize } = require("v8");
 
 // create a new credit generation form
 router.post("/credit-forms", authenticate, async (req, res) => {
@@ -244,5 +247,85 @@ router.put("/update-credits-forms-status/:id", authenticate, async (req, res) =>
     }
   }
 );
+
+// update user credits
+router.put("/update-user-credits/:userId", authenticate, async (req,res) => {
+    try{
+      const { userId } = req.params;
+      const { credits } = req.body;
+
+      // finding user by id
+      const user = await userdb.findById(userId);
+      user.credits += credits;
+      await user.save();
+
+      res.send({
+        success: true,
+        message: "User's credits are updated",
+      });
+    }catch(error){
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
+});
+
+// create a credits record
+router.post("/assign-credits/:userId", authenticate, async(req, res) => {
+  try{
+    const { userId } = req.params;
+    const { credits, ed } = req.body;
+    
+    console.log("expiru date: ",  ed);
+    // creating a new credits document
+    const newCredit = new creditdb({
+      user: userId,
+      amount: credits,
+      expiryDate: ed,
+      status: "active"
+    });
+
+    await newCredit.save();
+    res.send({
+      success: true,
+      message: "Credits are assigned to user successfully",
+    });
+  }catch(error){
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// getting all the credits earned 
+router.get("/get-credits/user", authenticate, async(req, res) => {
+
+    try{
+      const user = req.rootUser;
+      const userId = user._id; // Access user ID directly from req.user
+      const credits = await creditdb.find({user: userId});
+      if(credits){
+        res.send({
+          success: true,
+          message: "Your credits are here!!!",
+          credits,
+        });
+      }
+      else{
+        res.send({
+          success: false,
+          message: "You have not earned any credits",
+          credits,
+        });
+      }
+    }catch(error){
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
+});
 
 module.exports = router;

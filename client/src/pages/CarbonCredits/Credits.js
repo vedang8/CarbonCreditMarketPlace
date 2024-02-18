@@ -132,8 +132,7 @@ function Credits() {
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
-      console.log("inside the get data function : ", user.ValidUserOne._id)
-
+      
       const response = await fetch(
         `/get-credit-forms`
       );
