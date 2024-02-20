@@ -3,6 +3,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { message, Table } from "antd";
 import { SetLoader } from "../../redux/loadersSlice";
+import "../mix.css"
 
 function Carbon_Credits() {
     const [credits, setCredits] = useState([]);
@@ -101,9 +102,9 @@ function Carbon_Credits() {
     ];
 
     return (
-        <div>
-            <h1>Credit Table</h1>
-            <p>Total Credits Earned: {totalCredits}</p>
+        <div className="icons">
+            <i class="fa-duotone fa-coins" ></i>
+            <h1>Total Credits Earned: {totalCredits}</h1>
             <Table columns={columns} dataSource={credits} />
         </div>
     );

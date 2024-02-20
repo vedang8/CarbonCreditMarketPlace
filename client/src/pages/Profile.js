@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Credits from './CarbonCredits/Credits';
 import Carbon_Credits from './CarbonCredits/CCredits';
+import SellCredits from './CarbonCredits/SellCredits';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -74,8 +75,9 @@ export default function Profile() {
             TabIndicatorProps={{ style: { backgroundColor: 'green' } }}
           >
             <StyledTab label="My Forms" {...a11yProps(0)} $isSelected={value === 0} />
-            <StyledTab label="Bids" {...a11yProps(1)} $isSelected={value === 1} />
-            <StyledTab label="Credits" {...a11yProps(2)} $isSelected={value === 2} />
+            <StyledTab label="Credits" {...a11yProps(1)} $isSelected={value === 1} />
+            <StyledTab label="Seller" {...a11yProps(2)} $isSelected={value === 2} />
+            <StyledTab label="Bids" {...a11yProps(3)} $isSelected={value === 3} />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -83,10 +85,13 @@ export default function Profile() {
           < Credits />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          Item Two
+          < Carbon_Credits />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          < Carbon_Credits />
+          <SellCredits />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          Bids
         </CustomTabPanel>
       </Box>
     </ThemeProvider>

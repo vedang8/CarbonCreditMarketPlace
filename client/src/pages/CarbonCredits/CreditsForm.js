@@ -48,24 +48,31 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
   };
   
     const handleNext = () => {
-      if(activeTab === 0){
-        if(!formData.description || !formData.endDate || !formData.projectName || !formData.startDate){
-            alert("Please fill all the fields");
-            return;
-        }
-      }else if(activeTab === 1){
-        if(!formData.baselineEmissionAmount || !formData.projectEmissionAmount){
+      if (activeTab === 0) {
+        if (
+          !formData.description ||
+          !formData.endDate ||
+          !formData.projectName ||
+          !formData.startDate
+        ) {
           alert("Please fill all the fields");
           return;
         }
-      }else if(activeTab === 2){
-        if(!formData.tree || !formData.solarPanel || !formData.electricity){
+      } else if (activeTab === 1) {
+        if (
+          !formData.baselineEmissionAmount ||
+          !formData.projectEmissionAmount
+        ) {
           alert("Please fill all the fields");
           return;
         }
-       }
-     
-  
+      } else if (activeTab === 2) {
+        if (!formData.tree || !formData.solarPanel || !formData.electricity) {
+          alert("Please fill all the fields");
+          return;
+        }
+      }
+
       setActiveTab((prevTab) => prevTab + 1);
     }; 
     
