@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Credits from './Credits';
 import Users from './Users';
+import SellCredits from './SellCredits';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,6 +76,7 @@ export default function Admin() {
           >
             <StyledTab label="Credit Forms" {...a11yProps(0)} $isSelected={value === 0} />
             <StyledTab label="Users" {...a11yProps(1)} $isSelected={value === 1} />
+            <StyledTab label="Sell Forms" {...a11yProps(2)} $isSelected={value === 2} />
      
           </Tabs>
         </Box>
@@ -84,6 +86,9 @@ export default function Admin() {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           < Users />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          < SellCredits />
         </CustomTabPanel>
       </Box>
     </ThemeProvider>

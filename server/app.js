@@ -15,9 +15,11 @@ app.use(fileupload({
 }));
 const userRoute = require("./routes/userRoute");
 const creditsRoute = require("./routes/creditsRoute");
+const sellCreditsRoute = require("./routes/sellCreditsRoute");
 
 app.use(userRoute);
 app.use(creditsRoute);
+app.use(sellCreditsRoute);
 
 app.listen(port, ()=>{
     console.log(`server start at port no: ${port}`);

@@ -28,8 +28,8 @@ const SellCreditsForm = ({
   const [imageTabEnabled, setImageTabEnabled] = useState(false);
 
   const [formData, setFormData] = useState({
-    sell_credits: "",
-    sell_before_date: "",
+    sellCredits: "",
+    sellBeforeDate: "",
     user: "",
     images: [],
     status: "pending",
@@ -59,15 +59,13 @@ const SellCreditsForm = ({
       // Dispatch action to set loading state to true
       dispatch(SetLoader(true));
       // Validation of form fields
-      if (!formData.sell_credits || !formData.sell_before_date) {
+      if (!formData.sellCredits || !formData.sellBeforeDate) {
         message.error("Please fill all the fields of the form");
         return;
       }
       // Get the authorization token from the request headers
       const token = localStorage.getItem("usersdatatoken"); // Assuming you store the token in local storage
-
-      console.log(token);
-
+      
       const formDataWithUser = {
         ...formData,
         user: JSON.parse(atob(token.split(".")[1])).id,
@@ -115,8 +113,8 @@ const SellCreditsForm = ({
           console.log(data);
           setFormData({
             ...formData,
-            sell_credits: "",
-            sell_before_date: "",
+            sellCredits: "",
+            sellBeforeDate: "",
             status: "",
             images: [],
           });
@@ -141,8 +139,8 @@ const SellCreditsForm = ({
   const handleCloseClick = () => {
     setFormData({
       ...formData,
-      sell_credits: "",
-      sell_before_date: "",
+      sellCredits: "",
+      sellBeforeDate: "",
       status: "",
       images: [],
     });
@@ -184,28 +182,28 @@ const SellCreditsForm = ({
               <TabPanel value={activeTab} index={0}>
                 {/* Content for Project Information tab */}
                 <div className="form_input">
-                  <label htmlFor="sell_credits">Credits to be Sold</label>
+                  <label htmlFor="sellCredits">Credits to be Sold</label>
                   <input
                     type="text"
                     onChange={setfVal}
-                    value={formData.sell_credits}
-                    name="sell_credits"
-                    id="sell_credits"
+                    value={formData.sellCredits}
+                    name="sellCredits"
+                    id="sellCredits"
                     required
                   />
                 </div>      
                 <div className="form_input">
-                  <label htmlFor="sell_before_date">Date</label>
+                  <label htmlFor="sellBeforeDate">Date</label>
                   <input
                     type="date"
                     onChange={setfVal}
                     value={
-                      formData.sell_before_date
-                        ? format(new Date(formData.sell_before_date), "yyyy-MM-dd")
+                      formData.sellBeforeDate
+                        ? format(new Date(formData.sellBeforeDate), "yyyy-MM-dd")
                         : ""
                     }
-                    name="sell_before_date"
-                    id="sell_before_date"
+                    name="sellBeforeDate"
+                    id="sellBeforeDate"
                     required
                   />
                 </div>

@@ -132,9 +132,6 @@ router.get("/get-credit-forms/user/:userId", async (req, res) => {
 router.get("/get-credit-forms/:id", async (req, res) => {
   try {
     const formId = req.params.id;
-    console.log("get iiii");
-    console.log("formid", formId);
-
     // Check if the provided ID is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(formId)) {
       return res.send({

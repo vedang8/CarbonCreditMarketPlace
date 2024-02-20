@@ -64,14 +64,15 @@ function SellCredits() {
       }
     }
   };
+
   const columns = [
     {
       title: "Selling Credits",
-      dataIndex: "sell_credits",
+      dataIndex: "sellCredits",
     },
     {
       title: "Date Before to be sold",
-      dataIndex: "sell_before_date",
+      dataIndex: "sellBeforeDate",
     },
     {
       title: "Status",
@@ -105,14 +106,23 @@ function SellCredits() {
     try {
       dispatch(SetLoader(true));
       
+      const token = localStorage.getItem("usersdatatoken");
       const response = await fetch(
-        `/get-sell-credit-forms`
+        "/get-sell-credit-forms",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
       );
       dispatch(SetLoader(false));
+
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-        setSellCreditsForm(data.forms);
+        setSellCreditsForm(data?.forms);
       }
     } catch (error) {
       dispatch(SetLoader(false));
@@ -120,7 +130,6 @@ function SellCredits() {
     }
   };
 
-  console.log(user);
   useEffect(() => {
     getData();
   }, []);
