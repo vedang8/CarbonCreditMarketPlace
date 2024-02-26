@@ -121,8 +121,9 @@ function SellCredits() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setSellCreditsForm(data?.forms);
+        console.log("edbhxuidhui",sellCreditsForm);
+        message.success(data.message)
       }
     } catch (error) {
       dispatch(SetLoader(false));
