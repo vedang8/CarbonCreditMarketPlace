@@ -1,0 +1,93 @@
+.countdown .content {
+	display: flex;
+	flex-direction: row;
+	/* justify-content: center; */
+	margin: auto;
+	gap: 5px; /* Reduced gap */
+  }
+  
+  .countdown h2 {
+	margin-bottom: 5px; /* Reduced margin */
+	font-size: 20px; /* Reduced font size */
+  }
+  
+  .countdown .box {
+	width: calc(100% / 4);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 80px; /* Reduced height */
+	max-width: 80px; /* Reduced max-width */
+  }
+  
+  .countdown .value {
+	font-size: 16px; /* Reduced font size */
+	font-weight: 600;
+	background-color: #144b40;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 8px;
+	width: 40px; /* Reduced width */
+	height: 40px; /* Reduced height */
+	position: relative;
+	box-shadow: -2px 0px 5px 1px #232423ad;
+  }
+  
+  @media screen and (min-width: 550px) {
+	.countdown .content {
+	  gap: 10px; /* Adjusted gap */
+	}
+	.countdown .value {
+	  font-size: 20px; /* Adjusted font size */
+	  width: 60px; /* Adjusted width */
+	  height: 60px; /* Adjusted height */
+	}
+	.countdown .box {
+	  height: 120px; /* Adjusted height */
+	  max-width: 120px; /* Adjusted max-width */
+	}
+  }
+  
+  @media screen and (min-width: 790px) {
+	.countdown .value {
+	  font-size: 30px; /* Adjusted font size */
+	  width: 80px; /* Adjusted width */
+	  height: 80px; /* Adjusted height */
+	}
+	.countdown .box {
+	  max-width: 100px; /* Adjusted max-width */
+	  height: 100px; /* Adjusted height */
+	}
+  }
+  
+  .countdown .value::before {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 1px;
+	z-index: 2;
+	background-color: #313131b0;
+	box-shadow: 0px 0px 5px 0px #2e2f2ed6;
+  }
+  
+  .countdown .value::after {
+	content: "";
+	position: absolute;
+	z-index: 2;
+	left: -5px;
+	width: 8px;
+	height: 16px;
+	background-color: #969696;
+	box-shadow: inset -1px 1px 5px 1px #0e0e0ead;
+  }
+  
+  .countdown .label {
+	font-size: 12px; /* Reduced font size */
+	font-weight: 100;
+	letter-spacing: 2px; /* Adjusted letter spacing */
+	margin-top: 3px; /* Reduced margin */
+  }
+  

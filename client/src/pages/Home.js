@@ -59,10 +59,12 @@ const Home = () => {
                   key={form._id}
                   onClick = {() => navigate(`/sell-credit/${form._id}`)}
                   >
-                    <img
+                    {form.images && form.images.length > 0 ? (<img
                       src={form.images[0]}
                       className="w-full h-40 object-cover"
-                    />
+                    /> ) : (
+                      <div> No image available</div>
+                    )}
                     <div className="px-2 flex flex-col gap-2">
                       <h1 className="text-lg font-semibold">{form.user.fname}</h1>
                       <Divider />

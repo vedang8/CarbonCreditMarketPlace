@@ -11,8 +11,9 @@ const sellCreditFormSchema = new mongoose.Schema(
             required: true,
         },
         images: {
-            type: Array,
-            default: [],
+            type: String,
+            default: "",
+            required: true,
         },
         user:{
             type: mongoose.Schema.Types.ObjectId,

@@ -180,16 +180,18 @@ router.post("/upload-image-to-form", authenticate, upload.single("photo"), async
   const upload = await cloudinary.uploader.upload(req.file.path);
   
   const creditId = req.body.creditId;
+  
   try{
     const credits_form = await CreditForm.findById(creditId)
     credits_form.images.push({
-      url: upload.secure_url
+       url: req.file.path,
     });
     await credits_form.save();
     
     res.send({
       success: true,
       message: "Image uploaded scuccessfully",
+      data: upload.secure_url,
     });
   }catch(error){
     res.send({

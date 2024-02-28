@@ -3,6 +3,7 @@ import SellCreditsForm from "./SellCreditsForm";
 import { useDispatch, useSelector } from "react-redux";
 import { message, Table } from "antd";
 import { SetLoader } from "../../redux/loadersSlice";
+import CountdownTimer from "../../components/CountdownTimer";
 
 function SellCredits() {
   const [selectedSellCredit, setSelectedSellCredit] = useState(null);
@@ -73,6 +74,7 @@ function SellCredits() {
     {
       title: "Date Before to be sold",
       dataIndex: "sellBeforeDate",
+      render: (sellBeforeDate) => <CountdownTimer targetDate={sellBeforeDate} />
     },
     {
       title: "Status",
@@ -120,10 +122,9 @@ function SellCredits() {
       dispatch(SetLoader(false));
 
       if (response.ok) {
-        const data = await response.json();
-        setSellCreditsForm(data?.forms);
-        console.log("edbhxuidhui",sellCreditsForm);
-        message.success(data.message)
+        const resdata = await response.json();
+        const { data } = resdata;
+        setSellCreditsForm(data);
       }
     } catch (error) {
       dispatch(SetLoader(false));
