@@ -5,7 +5,7 @@ cloudinary.config({
     cloud_name: 'drtgq0any', 
     api_key: '427833225974426', 
     api_secret: 'yHl26sTuJtNycg7pxhzVoypRDKk' ,
-    timeout: 60000, 
+    // timeout: 60000, 
 });
 
 module.exports = cloudinary;

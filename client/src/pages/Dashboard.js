@@ -8,6 +8,7 @@ import Home from './Home';
 import Profile from './Profile';
 import Admin from './Admin/index';
 import {message} from 'antd';
+import SellCreditsInfo from './SellCreditsInfo/index.js';
 
 const Dashboard = () => {
     
@@ -95,6 +96,7 @@ const Dashboard = () => {
                 <Routes>
                     <Route>
                         <Route path="/home" element={<Home />}/>
+                        <Route path="/sell-credit/:id" element={<SellCreditsInfo/>} />
                         <Route path="/profile" element={<Profile />}/>
                         <Route path="/admin" element={<Admin />}/>
                     </Route>

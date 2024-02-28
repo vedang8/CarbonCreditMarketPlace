@@ -98,9 +98,10 @@ router.delete("/delete-credit-forms/:id", authenticate, async (req, res) => {
 });
 
 // get a specific credit generation form by ID
-router.get("/get-credit-forms/user/:userId", async (req, res) => {
+router.get("/get-credit-forms-user", authenticate, async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const user = req.rootUser;
+    const userId = user._id;
 
     // Fetch forms associated with the specified user ID
     const forms = await genform.find({ user: userId }).sort({ createdAt: -1 });
@@ -112,9 +113,6 @@ router.get("/get-credit-forms/user/:userId", async (req, res) => {
         message: "No credit forms found for the specified user ID.",
       });
     }
-
-    // Return the found forms
-    console.log("forms", forms);
     res.send({
       success: true,
       data: forms,
@@ -165,64 +163,38 @@ router.get("/get-credit-forms/:id", async (req, res) => {
 
 // get image from pc
 const storage = multer.diskStorage({
-  // destination: (req, file, callback) => {
-  //    callback(null, './uploads');
-  // },
+  destination: (req, file, callback) => {
+     callback(null, './uploads');
+  },
   filename: function (req, file, callback) {
-    callback(null, Date.now() + file.originalname); // use the original filename
+    callback(null, `image-${Date.now()}.${file.originalname}`); // use the original filename
   },
 });
 
+
 // handle image upload to cloudinary
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage});
 
-router.post("/upload-image-to-form", async (req, res) => {
-  try {
-    console.log("Request File:", req.file);
-
-    console.log("Before cloudinary Upload");
-    let result;
-    try {
-      // console.log(req.file)
-      // const fileBuffer = fs.readFileSync(req.file.path);
-      // Make sure to await the Cloudinary upload operation
-      result = await uploadImageCloudinary(req.files.file);
-      console.log("RESULT:");
-      console.log(result);
-
-      console.log("Cloudinary Upload Result:", result);
-    } catch (error) {
-      console.error("Error during Cloudinary upload: ", error);
-      return res.status(500).send({
-        success: false,
-        message: "Image upload failed",
-        error: error.message,
-      });
-    }
-    console.log("After cloudinary upload");
-
-    const creditId = req.body.creditId;
-    try {
-      await CreditForm.findByIdAndUpdate(creditId, {
-        $push: { images: result.secure_url },
-      });
-    } catch (err) {
-      res.send({
-        success: false,
-        message: err.message,
-      });
-    }
-
+router.post("/upload-image-to-form", authenticate, upload.single("photo"), async (req, res) => {
+  
+  const upload = await cloudinary.uploader.upload(req.file.path);
+  
+  const creditId = req.body.creditId;
+  try{
+    const credits_form = await CreditForm.findById(creditId)
+    credits_form.images.push({
+      url: upload.secure_url
+    });
+    await credits_form.save();
+    
     res.send({
       success: true,
-      message: "Image Uploaded successfully",
-      result,
+      message: "Image uploaded scuccessfully",
     });
-  } catch (error) {
-    console.error("Error in the main try-catch block: ", error);
+  }catch(error){
     res.send({
-      success: false,
-      message: error.message,
+      success: true,
+      message: error.message
     });
   }
 });

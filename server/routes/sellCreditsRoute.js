@@ -51,6 +51,22 @@ router.get("/get-all-sell-credit-forms", authenticate, async (req, res) => {
   }
 });
 
+// get sell form by id
+router.get("/get-sell-credit-by-id/:id", authenticate, async(req, res) => {
+  try{
+    const credit = await SellCreditForm.findById(req.params.id).populate("user"); 
+    res.send({
+      success: true,
+      data: credit,
+    });
+  }catch(error){
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 // get sell forms of logged in user
 router.get("/get-sell-credit-forms", authenticate, async (req, res) => {
   try {
@@ -101,4 +117,5 @@ router.put("/update-sell-credits-forms-status/:id", authenticate, async (req, re
   }
 }
 );
+
 module.exports = router;

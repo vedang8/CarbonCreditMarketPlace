@@ -133,14 +133,19 @@ function Credits() {
     try {
       dispatch(SetLoader(true));
       
-      const response = await fetch(
-        `/get-credit-forms`
-      );
+      const token = localStorage.getItem("usersdatatoken");
+      const response = await fetch(`/get-credit-forms-user`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        });
       dispatch(SetLoader(false));
       if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        setCreditsForm(data.forms);
+        const resdata = await response.json();
+        const { data } = resdata;
+        setCreditsForm(data);
       }
     } catch (error) {
       dispatch(SetLoader(false));

@@ -9,10 +9,10 @@ const port = 8009;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use(fileupload({
-    useTempFiles: true,
-    tempFileDir: "D:/Projects/CCMP/server/uploads",
-}));
+// app.use(fileupload({
+//     useTempFiles: true,
+//     tempFileDir: "D:/Projects/CCMP/server/uploads",
+// }));
 const userRoute = require("./routes/userRoute");
 const creditsRoute = require("./routes/creditsRoute");
 const sellCreditsRoute = require("./routes/sellCreditsRoute");

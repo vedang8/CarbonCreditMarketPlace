@@ -10,7 +10,11 @@ function Images({
 }) {
   const [file=null, setFile] = useState(null);
   const dispatch = useDispatch();
-  const upload = async () => {
+
+  const upload = async (e) => {
+    
+    e.preventDefault();
+
     try{
       console.log('File:', file);
         
@@ -18,28 +22,31 @@ function Images({
         message.error('Please select an image to upload.');
         return;
       }
+
       dispatch(SetLoader(true)); 
       
       // Upload Image to cloudinary 
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("photo", file);
+      console.log(formData)
       formData.append("creditId", selectedCredit._id);
-      
+
       const token = localStorage.getItem("usersdatatoken");
-      const res = await fetch("/upload-image-to-form", {
+
+      const response = await fetch(`/upload-image-to-form`, {
         method: "POST",
         headers: {
-          "Authorization": token,
+            Authorization: token,
         },
         body: formData,
       });
-      const data = await res.json();
-      if(data.success){
-        message.success(data.message);
+       
+      dispatch(SetLoader(false));
+      
+      if(response.ok){
+        message.success(response.message);
         getData();
         setShowCreditsForm(false);
-      }else{
-        message.error(data.message);
       }
     }catch(error){
       dispatch(SetLoader(false)); 
