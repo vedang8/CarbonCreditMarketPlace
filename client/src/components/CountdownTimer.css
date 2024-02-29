@@ -1,14 +1,13 @@
 .countdown .content {
 	display: flex;
 	flex-direction: row;
-	/* justify-content: center; */
 	margin: auto;
 	gap: 5px; /* Reduced gap */
   }
   
   .countdown h2 {
 	margin-bottom: 5px; /* Reduced margin */
-	font-size: 20px; /* Reduced font size */
+	font-size: 18px; /* Reduced font size */
   }
   
   .countdown .box {
@@ -17,12 +16,12 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	height: 80px; /* Reduced height */
-	max-width: 80px; /* Reduced max-width */
+	height: 60px; /* Reduced height */
+	max-width: 60px; /* Reduced max-width */
   }
   
   .countdown .value {
-	font-size: 16px; /* Reduced font size */
+	font-size: 14px; /* Reduced font size */
 	font-weight: 600;
 	background-color: #144b40;
 	color: white;
@@ -30,8 +29,8 @@
 	justify-content: center;
 	align-items: center;
 	border-radius: 8px;
-	width: 40px; /* Reduced width */
-	height: 40px; /* Reduced height */
+	width: 30px; /* Reduced width */
+	height: 30px; /* Reduced height */
 	position: relative;
 	box-shadow: -2px 0px 5px 1px #232423ad;
   }
@@ -41,25 +40,25 @@
 	  gap: 10px; /* Adjusted gap */
 	}
 	.countdown .value {
-	  font-size: 20px; /* Adjusted font size */
-	  width: 60px; /* Adjusted width */
-	  height: 60px; /* Adjusted height */
+	  font-size: 16px; /* Adjusted font size */
+	  width: 50px; /* Adjusted width */
+	  height: 50px; /* Adjusted height */
 	}
 	.countdown .box {
-	  height: 120px; /* Adjusted height */
-	  max-width: 120px; /* Adjusted max-width */
+	  height: 100px; /* Adjusted height */
+	  max-width: 100px; /* Adjusted max-width */
 	}
   }
   
   @media screen and (min-width: 790px) {
 	.countdown .value {
-	  font-size: 30px; /* Adjusted font size */
-	  width: 80px; /* Adjusted width */
-	  height: 80px; /* Adjusted height */
+	  font-size: 18px; /* Adjusted font size */
+	  width: 60px; /* Adjusted width */
+	  height: 60px; /* Adjusted height */
 	}
 	.countdown .box {
-	  max-width: 100px; /* Adjusted max-width */
-	  height: 100px; /* Adjusted height */
+	  max-width: 80px; /* Adjusted max-width */
+	  height: 80px; /* Adjusted height */
 	}
   }
   
@@ -90,4 +89,5 @@
 	letter-spacing: 2px; /* Adjusted letter spacing */
 	margin-top: 3px; /* Reduced margin */
   }
+  
   

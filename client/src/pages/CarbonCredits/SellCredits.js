@@ -70,6 +70,7 @@ function SellCredits() {
     {
       title: "Selling Credits",
       dataIndex: "sellCredits",
+      render: (text) => <span style={{ fontSize: '16px' }}>{text}</span>
     },
     {
       title: "Date Before to be sold",
@@ -79,6 +80,7 @@ function SellCredits() {
     {
       title: "Status",
       dataIndex: "status",
+      render: (text) => <span style={{ fontSize: '16px' }}>{text}</span>
     },
     {
       title: "Action",

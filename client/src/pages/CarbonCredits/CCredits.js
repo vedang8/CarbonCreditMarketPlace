@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { message, Table } from "antd";
 import { SetLoader } from "../../redux/loadersSlice";
 import "../mix.css"
+import CountdownTimer from "../../components/CountdownTimer";
 
 function Carbon_Credits() {
     const [credits, setCredits] = useState([]);
@@ -11,6 +12,7 @@ function Carbon_Credits() {
     const dispatch = useDispatch();
     const fetchCredits = async () => {
         try {
+            dispatch(SetLoader(true))
             const token = localStorage.getItem("usersdatatoken");
             const response = await fetch("/get-credits/user", {
                 method: "GET",
@@ -19,7 +21,7 @@ function Carbon_Credits() {
                     Authorization: token,
                 },
             });
-    
+            dispatch(SetLoader(false))
             if (response.ok) {
                 const data = await response.json();
                 const updatedCredits = data.credits.map((credit) => {
@@ -65,23 +67,42 @@ function Carbon_Credits() {
         setCredits(updatedCredits);
     };
 
-    const calculateTimeLeft = (expiryDate) => {
-        const expirationTime = new Date(expiryDate).getTime();
-        console.log("expiration time::: ", expirationTime);
-        const currentTime = new Date().getTime();
-        const timeDifference = expirationTime - currentTime;
+    // const calculateTimeLeft = (expiryDate) => {
+    //     const expirationTime = new Date(expiryDate).getTime();
+    //     const currentTime = new Date().getTime();
+    //     const timeDifference = expirationTime - currentTime;
     
-        if (timeDifference <= 0) {
-            // Credit has expired
-            return { status: 'Expired', remainingTime: '' };
+    //     let status;
+    //     let remainingTime;
+    
+    //     if (timeDifference <= 0) {
+    //         status = 'Expired';
+    //         remainingTime = '';
+    //     } else {
+    //         status = 'Active';
+    //         remainingTime = timeDifference;
+    //     }
+    
+    //     return { status, remainingTime };
+    // };
+    const calculateTimeLeft = (expiryDate) => {
+        const expirationDate = new Date(expiryDate);
+        const currentTime = new Date();
+        
+        let status;
+        let remainingTime;
+    
+        if (expirationDate < currentTime) {
+            status = 'Expired';
+            remainingTime = '';
+        } else {
+            status = 'Active';
+            remainingTime = expirationDate;
         }
     
-        // Calculate remaining time in days, hours, minutes, and seconds
-        const duration = moment.duration(timeDifference);
-        const remainingTime = duration.humanize();
-    
-        return { status: 'Active', remainingTime };
+        return { status, remainingTime };
     };
+    
 
     const columns = [
         {
@@ -93,11 +114,22 @@ function Carbon_Credits() {
             title: 'Expiration Status',
             dataIndex: 'status',
             key: 'status',
+            render: (status) => {
+                return <span>{status}</span>;
+            }
         },
         {
             title: 'Remaining Time',
-            dataIndex: 'remainingTime',
-            key: 'remainingTime',
+            dataIndex: 'expiryDate',
+            key: 'expiryDate',
+            render: (expiryDate, record) => {
+                const { status, remainingTime } = calculateTimeLeft(expiryDate);
+                return status === 'Active' ? (
+                    <CountdownTimer targetDate={remainingTime} />
+                ) : (
+                    <span>{record.status}</span>
+                );
+            }
         },
     ];
 
