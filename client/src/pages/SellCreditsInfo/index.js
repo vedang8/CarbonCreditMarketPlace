@@ -26,10 +26,11 @@ function SellCreditsInfo() {
           Authorization: token,
         },
       });
-
+      console.log(response);
       dispatch(SetLoader(false))
       if(response.ok){
-        setSellCredit(response.data);
+        const data = await response.json();
+        setSellCredit(data);
       }
     }catch(error){
       dispatch(SetLoader(false))
@@ -41,29 +42,34 @@ function SellCreditsInfo() {
     // Function to fetch data from the backend
     getData()
   }, [])
+  if (!sellCredit) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
-    console.log("sell crediittt")
-    
-    <div>
-      <div className="grid grid-cols-2 gap-5">
-        {/* images */}
-        <div className="flex flex-col gap-2">
-          <img
-          src={sellCredit.images[selectedImageIndex]}
-          alt="profile image"
-          className="w-full h-96 object-cover rounded-md"
-          />
-        </div>
+      <div>
+        <div className="grid grid-cols-2 gap-5">
+          {/* images */}
+          <div className="flex flex-col gap-2">
+            {sellCredit && sellCredit.images && sellCredit.images.length > 0 ? (
+              <img
+                src={sellCredit.images[selectedImageIndex]}
+                alt="profile image"
+                className="w-20 h-20 rounded-md mt-5"
+              />
+            ) : (
+              <p>No image available</p>
+            )}
+          </div>
 
-        {/* details */}
-        <div className="flex flex-col gap-5">
-          <h1 className="text-2xl font-semibold text-brown-500">{sellCredit?.user?.fname}</h1>
+          {/* details */}
+          <div className="flex flex-col gap-5">
+            <h1 className="text-2xl font-semibold text-brown-500 mt-5">{sellCredit?.data.user?.fname}</h1>
+          </div>
+
+          <Divider />
         </div>
-        
-        <Divider/>
       </div>
-    </div>
     </>
   )
 }

@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Divider from "../components/Divider";
-
+import CountdownTimer from '../components/CountdownTimer';
 const Home = () => {
     const {logindata, setLoginData} = useContext(LoginContext);
     const [credits, setCredits] = useState([]); 
@@ -61,19 +61,21 @@ const Home = () => {
                   >
                     {form.images && form.images.length > 0 ? (<img
                       src={form.images[0]}
-                      className="w-full h-40 object-cover"
+                      className=" h-40 object-cover"
                     /> ) : (
                       <div> No image available</div>
                     )}
+                     <Divider />
                     <div className="px-2 flex flex-col gap-2">
-                      <h1 className="text-lg font-semibold">{form.user.fname}</h1>
+                      <h1 className="text-lg font-semibold text-xl">{form.user.fname}</h1>
                       <Divider />
                       <i className="ri-hand-coin-fill" style={{ color: 'green' }}>
                       <span className="text-xl font-semibold text-green-700">
                        <strong> {form.sellCredits} </strong>
                       </span>
                       </i>
-                    {new Date(form.sellBeforeDate).toLocaleDateString()}
+                      <Divider />
+                      <CountdownTimer targetDate={form.sellBeforeDate} />
                     </div> 
                   </div>
                 );
