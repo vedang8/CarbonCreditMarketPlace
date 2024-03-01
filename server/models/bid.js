@@ -3,15 +3,18 @@ const bidSchema = new mongoose.Schema(
   {
     sellCredits: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "sellCreditForm",
+      ref: "sell_creditforms",
+      required: true,
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "SellCreditForm",
+      ref: "users",
+      required: true,
     },
     buyer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
+      required: true,
     },
     bidAmount: {
       type: Number,

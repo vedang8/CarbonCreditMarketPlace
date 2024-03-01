@@ -115,12 +115,11 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
         // Get the authorization token from the request headers
         const token = localStorage.getItem("usersdatatoken"); // Assuming you store the token in local storage
 
-        console.log(token);
-
         const formDataWithUser = {
           ...formData,
           user: JSON.parse(atob(token.split('.')[1])).id,
         };
+        
         console.log("Selected Crdeit: ", selectedCredit);
         if(selectedCredit){
            console.log("Sending fetch request", formDataWithUser);

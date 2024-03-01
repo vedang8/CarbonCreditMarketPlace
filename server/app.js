@@ -16,10 +16,12 @@ app.use(cors());
 const userRoute = require("./routes/userRoute");
 const creditsRoute = require("./routes/creditsRoute");
 const sellCreditsRoute = require("./routes/sellCreditsRoute");
+const bidsRoute = require("./routes/bidsRoute");
 
 app.use(userRoute);
 app.use(creditsRoute);
 app.use(sellCreditsRoute);
+app.use(bidsRoute);
 
 app.listen(port, ()=>{
     console.log(`server start at port no: ${port}`);
