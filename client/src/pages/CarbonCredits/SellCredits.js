@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { message, Table } from "antd";
 import { SetLoader } from "../../redux/loadersSlice";
 import CountdownTimer from "../../components/CountdownTimer";
+import Bids from "./Bids";
 
 function SellCredits() {
+  const [showBids, setShowBids] = useState(false);
   const [selectedSellCredit, setSelectedSellCredit] = useState(null);
   const [showSellCreditsForm, setShowSellCreditsForm] = useState(false);
   const [sellCreditsForm, setSellCreditsForm] = useState([]);
@@ -87,19 +89,27 @@ function SellCredits() {
       dataIndex: "action",
       render: (text, record) => {
         return (
-          <div className="flex gap-5">
+          <div className="flex gap-5 items-center">
             <i
-              className="ri-delete-bin-line"
+              className="ri-delete-bin-line cursor-pointer"
               onClick={() => {
                 handleDeleteClick(record);
               }}
             ></i>
             <i
-              className="ri-pencil-line"
+              className="ri-pencil-line cursor-pointer"
               onClick={() => {
                 handleEditClick(record);
               }}
             ></i>
+            <span className="underline cursor-pointer"
+              onClick={() => {
+                setSelectedSellCredit(record);
+                setShowBids(true);
+              }}
+            >
+              Show Bids
+            </span>
           </div>
         );
       },
@@ -152,6 +162,14 @@ function SellCredits() {
           getData={getData}
           editMode={editMode}
           handleDeleteClick={handleDeleteClick}
+        />
+      )}
+
+      {showBids && (
+        <Bids
+          showBidsModal={showBids}
+          setShowBidsModal={setShowBids}
+          selectedSellCredit={selectedSellCredit}
         />
       )}
     </div>
