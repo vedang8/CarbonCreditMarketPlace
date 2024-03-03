@@ -6,16 +6,13 @@ const authenticate = require("../middleware/authenticate");
 
 // for user registration
 router.post("/register", async(req, res) =>{
-
     const {fname, email, password, cpassword} = req.body;    
     if(!fname || !email || !password || !cpassword){
         res.status(422).json({error: "fill all the details"})
     }
-
     try{
         // check if user exists
         const preuser = await userdb.findOne({email: email});
-
         if(preuser){
             res.status(422).json({error: 'This Email is Already Exist'});
         }else if(password !== cpassword){
@@ -26,67 +23,19 @@ router.post("/register", async(req, res) =>{
                 fname, email, password, cpassword
             });
 
-            //here password hashing
+            // 10 credits as reward upon registering
+            finalUser.rewardCredits = 10;
 
             const storeData = await finalUser.save();
             //console.log(storeData);
             res.status(201).json({status:201, storeData});
         }
-    
     }catch(error){
         res.status(422).json(error);
         console.log("catch error");
-    }
-    
+    }  
 });
 
-// user login
-// router.post("/login", async(req,res)=>{
-//     //console.log(req.body);
-//     const {email, password} = req.body;    
-//     if(!email || !password){
-//         res.status(422).json({error: "fill all the details"})
-//     }
-
-//     try{
-//         // check if user exists
-//         const userValid = await userdb.findOne({email:email});
-        
-//         //if user is active
-//         if(!userValid){
-//             throw new Error("Invalid details");
-//         }
-//         if (userValid.status === "blocked") {
-//             res.status(422).json({error: "blocked"})
-//         }
-       
-            
-//             const isMatch = await bcrypt.compare(password, userValid.password);
-
-//             if(!isMatch){
-//                 res.status(422).json({error: "invalid details"})
-//             }else{
-//                 // token generation
-//                 const token = await userValid.generateAuthtoken();
-
-//                 // cookie generation
-//                 res.cookie("usercookie", token,{
-//                     expires: new Date(Date.now() + 9000000),
-//                     httpOnly: true
-//                 });
-
-//                 const result = {
-//                     userValid,
-//                     token
-//                 }
-//                 res.status(201).json({status:201, result})
-//             }
-        
-//     }catch(error){
-//         res.status(401).json(error);
-//         console.log("catch block");
-//     }
-// });
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -110,6 +59,10 @@ router.post("/login", async (req, res) => {
         if (!isMatch) {
             return res.status(422).json({ error: "Invalid details" });
         }
+        
+        // 2 credits reward for login
+        userValid.rewardCredits += 2;
+        await userValid.save();
 
         const token = await userValid.generateAuthtoken();
 
@@ -148,8 +101,10 @@ router.get("/logout", authenticate, async(req,res) =>{
         });
 
         res.clearCookie("usercookie",{path:"/"});
-
-        req.rootUser.save();
+        
+        // 1 credit reward
+        req.rootUser.rewardCredits += 1;
+        await req.rootUser.save();
 
         res.status(201).json({status:201})
 

@@ -9,7 +9,7 @@ import Divider from "../../components/Divider";
 import BidModel from "./BidModel";
 import { LoginContext } from "../../components/Context";
 
-function SellCreditsInfo() {
+function SellCreditsInfo({selectedSellCredit}) {
   const { logindata, setLoginData } = useContext(LoginContext);
   const [showAddNewBid, setShowAddNewBid] = useState(false);
   const [sellCredit, setSellCredit] = useState(null);
@@ -22,49 +22,44 @@ function SellCreditsInfo() {
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
-
+    
       const token = localStorage.getItem("usersdatatoken");
-      const res = await fetch("/validuser", {
+      console.log("hhhhh", selectedSellCredit)
+      // Fetch sell credit details
+      const sellCreditResponse = await fetch(`/get-sell-credit-by-id/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: token,
         },
       });
-      // if (res.ok) {
-      //   const data = await response.json();
-      //   setSellCredit(data);
-      
-      //   // Move the assignment of userId here
-      //   userId = data?.user?._id;
-      //   console.log("userId:::::::::", userId);
-      // }
-      
-      const response = await fetch(`/get-sell-credit-by-id/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-      console.log(response);
-      dispatch(SetLoader(false));
-      if (response.ok) {
-        // const bidsResponse = await fetch(`get-all-bids`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: token,
-        //   },
-        //   body: {}
-        // });
-        // setSellCredit({
-        //   ...response.data,
-        //   bids: bidsResponse.data,
-        // });
-        const data = await response.json();
-        setSellCredit(data);
+      if (!sellCreditResponse.ok) {
+        throw new Error("Failed to fetch sell credit details");
       }
+      const sellCreditData = await sellCreditResponse.json();
+    
+      // Fetch all bids related to the selected sell credit
+      const bidsResponse = await fetch(`/get-all-bids`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ selectedSellCredit: sellCreditData }), // Pass sell credit data as body
+      });
+      if (!bidsResponse.ok) {
+        throw new Error("Failed to fetch bids");
+      }
+      const bidsData = await bidsResponse.json();
+    
+      // Combine sell credit data with bids data
+      const updatedSellCredit = {
+        ...sellCreditData,
+        bids: bidsData.data, // Assuming bids are returned in the data field
+      };
+    
+      // Update state with combined data
+      setSellCredit(updatedSellCredit);
     } catch (error) {
       dispatch(SetLoader(false));
       message.error(error.message);
@@ -74,7 +69,7 @@ function SellCreditsInfo() {
   useEffect(() => {
     // Function to fetch data from the backend
     getData();
-  }, []);
+  }, [selectedSellCredit]);
   if (!sellCredit) {
     return <div>Loading...</div>;
   }
@@ -139,6 +134,28 @@ function SellCreditsInfo() {
                 </Button>
               </div>
             </div>
+            {
+                sellCredit.bids.map((bid) => {
+                  return (
+                    <div className="border border-gray-300 border-solid p-3 rounded mt-5">
+                      <div className="flex justify-between text-gray-700">
+                        <span>Name</span>
+                        <span> {bid.buyer.fname}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600">
+                        <span>Bid Amount</span>
+                        <span> $ {bid.bidAmount}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600">
+                        <span>Bid Place On</span>
+                        <span>
+                          {" "}
+                          {moment(bid.createdAt).format("MMM D , YYYY hh:mm A")}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
             {showAddNewBid && (
               <BidModel
                 sellCredit={sellCredit}

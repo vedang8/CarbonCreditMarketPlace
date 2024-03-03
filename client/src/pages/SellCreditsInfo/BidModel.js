@@ -8,7 +8,7 @@ function BidModel({ showBidModal, setShowBidModal, sellCredit, reloadData }) {
   const formRef = React.useRef(null);
   const rules = [{ required: true, message: "Required" }];
   const dispatch = useDispatch();
-  console.log("sell credit", sellCredit);
+  
   const onFinish = async (values) => {
     try {
 

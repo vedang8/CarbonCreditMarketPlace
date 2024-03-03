@@ -69,8 +69,9 @@ const Register = () => {
             dispatch(SetLoader(false));
             //console.log(res);
             if(res.status === 201){
-                message.success("Congratulations!!! You are registered");
+                message.success("Congratulations!!! 🎉 You are registered");
                 message.success("Please Login with your credentials");
+                message.success("🪙 10 Credits are rewarded! 🎊")
                 setInpval({...inpval, fname:"", email:"", password:"", cpassword:""});
                 navigate("/login");
             }

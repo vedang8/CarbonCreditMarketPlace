@@ -55,6 +55,7 @@ const Login = () => {
                 if (res.status === 201) {
                     localStorage.setItem("usersdatatoken", res.result.token);
                     message.success("Welcome to CARBON CREDIT MARKETPLACE");
+                    message.success("🪙 2 Credits are rewarded! 🎊")
                     navigate("/home");
                     setInpval({ ...inpval, email: "", password: "" });
                 } else if (res.error === "User account is blocked") {

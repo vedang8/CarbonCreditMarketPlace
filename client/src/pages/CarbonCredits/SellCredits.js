@@ -5,6 +5,7 @@ import { message, Table } from "antd";
 import { SetLoader } from "../../redux/loadersSlice";
 import CountdownTimer from "../../components/CountdownTimer";
 import Bids from "./Bids";
+import SellCreditsInfo from "../SellCreditsInfo";
 
 function SellCredits() {
   const [showBids, setShowBids] = useState(false);
@@ -172,6 +173,12 @@ function SellCredits() {
           selectedSellCredit={selectedSellCredit}
         />
       )}
+      {showBids && (
+        <SellCreditsInfo
+        selectedSellCredit={selectedSellCredit}
+      />
+      )}
+      
     </div>
   );
 }

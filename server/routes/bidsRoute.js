@@ -22,15 +22,14 @@ router.post("/place-new-bid", authenticate, async (req, res) => {
 // get all bids
 router.post("/get-all-bids", authenticate, async (req, res) => {
   try {
-    const { sellCredits, seller } = req.body;
+    
+    const { selectedSellCredit} = req.body;
     let filters = {};
-    if (sellCredits) {
-      filters.sellCredits = sellCredits;
+    if (selectedSellCredit) {
+      filters.sellCredits = selectedSellCredit._id;;
+      filters.seller = selectedSellCredit.user;
     }
-    if (seller) {
-      filters.seller = seller;
-    }
-
+    console.log("filters", filters);
     const bids = await Bid.find(filters)
       .populate("sellCredits")
       .populate("buyer")

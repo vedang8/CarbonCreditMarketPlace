@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { SetLoader } from "../../redux/loadersSlice";
 import moment from "moment";
 import Divider from "../../components/Divider";
+import SellCreditsInfo from '../SellCreditsInfo';
 
 function Bids({
     showBidsModal,
@@ -24,6 +25,7 @@ function Bids({
                 "Content-Type": "application/json",
                 Authorization: token,
             },
+            body: JSON.stringify({ selectedSellCredit}),
         });
         dispatch(SetLoader(false));
         if (response.ok) {
@@ -50,7 +52,7 @@ function Bids({
         title: "Bid Date",
         dataIndex: "createdAt",
         render: (createdAt) => {
-            return moment(createdAt).format("MMM Do YYYY, h:mm:ss a");
+            return moment(createdAt).format("DD-MM-YYYY, h:mm:ss a");
         }
     },
     {
@@ -99,6 +101,7 @@ function Bids({
             <Table columns={columns} dataSource={bidsData} />
         </div> 
     </Modal>
+    
   )
 }
 

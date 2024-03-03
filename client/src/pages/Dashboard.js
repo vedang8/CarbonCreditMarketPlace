@@ -65,6 +65,7 @@ const Dashboard = () => {
             localStorage.removeItem("usersdatatoken");
             setLoginData(false);
             message.success("Logged out Successfully");
+            message.success("🪙 1 Credit rewarded! 🎊");
             navigate("/login");
         }
     }
