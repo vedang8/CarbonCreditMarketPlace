@@ -309,4 +309,39 @@ router.get("/get-credits/user", authenticate, async(req, res) => {
     }
 });
 
+// update user credits status
+router.put("/update-credits-status", authenticate, async(req, res) => {
+   const { credit_id } = req.body;
+   const status = "expired";
+   try{
+     const credits = await creditdb.findByIdAndUpdate(credit_id, { status });
+     res.send({
+      success: true,
+      message: "User credits updated Successfully",
+    });
+   }catch(error){
+    res.send({
+      success: false,
+      message: error.message,
+    })
+   }
+});
+
+// get reward credits
+router.get("/get-reward-credits-user", authenticate, async(req, res) => {
+    const user = req.rootUser;
+    const reward_credits = user.rewardCredits;
+    try{
+      res.send({
+        success: true,
+        reward_credits,
+      });
+    }catch(error){
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
+});
+
 module.exports = router;

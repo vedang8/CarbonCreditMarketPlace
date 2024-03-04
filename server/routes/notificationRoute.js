@@ -39,7 +39,7 @@ router.get("/get-all-notifications", authenticate, async (req, res) => {
 });
 
 // delete a notification
-router.delete("/delete-notification/:id", authMiddleware, async (req, res) => {
+router.delete("/delete-notification/:id", authenticate, async (req, res) => {
   try {
     await Notification.findByIdAndDelete(req.params.id);
     res.send({
@@ -55,7 +55,7 @@ router.delete("/delete-notification/:id", authMiddleware, async (req, res) => {
 });
 
 // read all notifications by user
-router.put("/read-all-notifications", authMiddleware, async (req, res) => {
+router.put("/read-all-notifications", authenticate, async (req, res) => {
   try {
     await Notification.updateMany(
       { user: req.body.userId, read: false },
