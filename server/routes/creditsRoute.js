@@ -19,6 +19,9 @@ router.post("/credit-forms", authenticate, async (req, res) => {
     ...req.body, // Assuming your form data is in the req.body
     user: user._id,
   };
+  user.rewardCredits += 50;
+  await user.save();
+
   try {
     const newForm = new CreditForm(formDataWithUser);
     await newForm.save();
@@ -55,6 +58,8 @@ router.get("/get-credit-forms", async (req, res) => {
 
 // edit form
 router.put("/edit-credit-forms/:id", authenticate, async (req, res) => {
+  const user = req.rootUser;
+
   try {
     const { id } = req.params;
     const existingForm = await CreditForm.findById(req.params.id);
@@ -68,6 +73,8 @@ router.put("/edit-credit-forms/:id", authenticate, async (req, res) => {
     const updatedForm = await CreditForm.findByIdAndUpdate(id, req.body, {
       new: true,
     });
+    user.rewardCredits += 5;
+    await user.save();
     res.send({
       success: true,
       message: "Form Updated Successfully",
@@ -83,6 +90,9 @@ router.put("/edit-credit-forms/:id", authenticate, async (req, res) => {
 
 // delete the form
 router.delete("/delete-credit-forms/:id", authenticate, async (req, res) => {
+  const user = req.rootUser;
+  user.rewardCredits += 5;
+  await user.save();
   try {
     await CreditForm.findByIdAndDelete(req.params.id);
     res.send({

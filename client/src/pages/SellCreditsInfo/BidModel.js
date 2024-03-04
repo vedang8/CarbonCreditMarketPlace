@@ -34,6 +34,7 @@ function BidModel({ showBidModal, setShowBidModal, sellCredit, reloadData }) {
 
       if (response.ok) {
         message.success("Bid added successfully");
+        message.success("🪙5 Credits are rewarded! 🎊")
         reloadData();
         setShowBidModal(false);
       } else {

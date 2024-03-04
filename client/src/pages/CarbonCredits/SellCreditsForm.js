@@ -120,8 +120,8 @@ const SellCreditsForm = ({
           });
           await getData();
           message.success(data.message);
+          message.success("🪙25 Credits are rewarded! 🎊")
           setShowSellCreditsForm(false);
-          //alert('Form submitted successfully')// Close the form after successful submission
         } else {
           message.error("Error submitting the form. Please try again.");
         }

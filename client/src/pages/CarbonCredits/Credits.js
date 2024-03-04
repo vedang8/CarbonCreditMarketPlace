@@ -53,6 +53,7 @@ function Credits() {
           const data = await res.json();
           console.log(data);
           message.success(data.message);
+          message.success("🪙5 Credits are rewarded! 🎊")
           getData();
         } else {
           console.error("Error deleting form");

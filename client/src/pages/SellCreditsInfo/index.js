@@ -17,8 +17,7 @@ function SellCreditsInfo({selectedSellCredit}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const user = useSelector((state) => state.users.user);
-  let userId = null;
+
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
@@ -33,33 +32,34 @@ function SellCreditsInfo({selectedSellCredit}) {
           Authorization: token,
         },
       });
+      dispatch(SetLoader(false));
       if (!sellCreditResponse.ok) {
         throw new Error("Failed to fetch sell credit details");
       }
       const sellCreditData = await sellCreditResponse.json();
     
       // Fetch all bids related to the selected sell credit
-      const bidsResponse = await fetch(`/get-all-bids`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ selectedSellCredit: sellCreditData }), // Pass sell credit data as body
-      });
-      if (!bidsResponse.ok) {
-        throw new Error("Failed to fetch bids");
-      }
-      const bidsData = await bidsResponse.json();
+      // const bidsResponse = await fetch(`/get-all-bids`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: token,
+      //   },
+      //   body: JSON.stringify({ selectedSellCredit: sellCreditData }), // Pass sell credit data as body
+      // });
+      // if (!bidsResponse.ok) {
+      //   throw new Error("Failed to fetch bids");
+      // }
+      // const bidsData = await bidsResponse.json();
     
-      // Combine sell credit data with bids data
-      const updatedSellCredit = {
-        ...sellCreditData,
-        bids: bidsData.data, // Assuming bids are returned in the data field
-      };
+      // // Combine sell credit data with bids data
+      // const updatedSellCredit = {
+      //   ...sellCreditData,
+      //   bids: bidsData.data, // Assuming bids are returned in the data field
+      // };
     
       // Update state with combined data
-      setSellCredit(updatedSellCredit);
+      setSellCredit(sellCreditData);
     } catch (error) {
       dispatch(SetLoader(false));
       message.error(error.message);
@@ -96,17 +96,17 @@ function SellCreditsInfo({selectedSellCredit}) {
           <div className="flex flex-col">
             <div>
               <h1 className="text-2xl font-semibold text-orange-900 mt-5">
-                {sellCredit.data.user.fname}
+                {sellCredit?.data?.user?.fname}
               </h1>
             </div>
 
             <div className="flex justify-between mt-2 mr-5 text-xl">
               <span>Carbon Credits</span>
-              <span>{sellCredit.data.sellCredits}</span>
+              <span>{sellCredit?.data?.sellCredits}</span>
             </div>
             <div className="flex justify-between mt-2 mr-5 text-xl">
               <span>Sell Before Date</span>
-              <span>{sellCredit.data.sellBeforeDate}</span>
+              <span>{sellCredit?.data?.sellBeforeDate}</span>
             </div>
             <Divider />
             <div>
@@ -120,7 +120,7 @@ function SellCreditsInfo({selectedSellCredit}) {
             </div>
             <div className="flex justify-between mt-2 mr-5 text-xl">
               <span>Email</span>
-              <span>{sellCredit.data.user.email}</span>
+              <span>{sellCredit?.data?.user?.email}</span>
             </div>
             <Divider />
             <div className="flex flex-col">
@@ -134,7 +134,7 @@ function SellCreditsInfo({selectedSellCredit}) {
                 </Button>
               </div>
             </div>
-            {
+            {/* {
                 sellCredit.bids.map((bid) => {
                   return (
                     <div className="border border-gray-300 border-solid p-3 rounded mt-5">
@@ -155,7 +155,7 @@ function SellCreditsInfo({selectedSellCredit}) {
                       </div>
                     </div>
                   );
-                })}
+                })} */}
             {showAddNewBid && (
               <BidModel
                 sellCredit={sellCredit}
@@ -168,7 +168,7 @@ function SellCreditsInfo({selectedSellCredit}) {
           <div className="text-grey-900 ml-5">
             <h1>Added On</h1>
             <span>
-              {moment(sellCredit.data.createdAt).format("MMM D, YYYY hh:mm A")}
+              {moment(sellCredit?.data?.createdAt).format("MMM D, YYYY hh:mm A")}
             </span>
           </div>
         </div>

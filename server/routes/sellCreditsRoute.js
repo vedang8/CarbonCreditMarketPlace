@@ -20,6 +20,8 @@ router.post("/sell-credit-forms", authenticate, async (req, res) => {
   try {
     const newForm = new SellCreditForm(formDataWithUser);
     await newForm.save();
+    user.rewardCredits += 25;
+    await user.save();
     res.send({
       success: true,
       message: "Form Submitted Successfully",

@@ -134,8 +134,9 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
            dispatch(SetLoader(false));
            if(res.ok) {
             const data = await res.json();
-            console.log(data);
+          //console.log(data);
             message.success(data.message);
+            message.success("🪙5 Credits are rewarded! 🎊")
             getData(); // Update the data after successful edit
             setShowCreditsForm(false);
            }else{
@@ -162,8 +163,8 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
                           baselineEmissionAmount: "", numOfTrees: "", numOfSolarPanels: "", electricity: "", status: "", images: []});
             await getData();
             message.success(data.message);
+            message.success("🪙50 Credits are rewarded! 🎊")
             setShowCreditsForm(false);
-            //alert('Form submitted successfully')// Close the form after successful submission
           } else {
             message.error('Error submitting the form. Please try again.');
             }

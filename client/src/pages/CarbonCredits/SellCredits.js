@@ -78,7 +78,7 @@ function SellCredits() {
     {
       title: "Date Before to be sold",
       dataIndex: "sellBeforeDate",
-      render: (sellBeforeDate) => <CountdownTimer targetDate={sellBeforeDate} />
+      render: (sellBeforeDate, record) => <CountdownTimer targetDate={sellBeforeDate} status={record.status} />
     },
     {
       title: "Status",
@@ -172,13 +172,7 @@ function SellCredits() {
           setShowBidsModal={setShowBids}
           selectedSellCredit={selectedSellCredit}
         />
-      )}
-      {showBids && (
-        <SellCreditsInfo
-        selectedSellCredit={selectedSellCredit}
-      />
-      )}
-      
+      )}  
     </div>
   );
 }

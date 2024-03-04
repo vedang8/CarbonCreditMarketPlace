@@ -38,7 +38,6 @@ function Carbon_Credits() {
         }
     };
     
-
     useEffect(() => {
         fetchCredits();
 
@@ -67,24 +66,6 @@ function Carbon_Credits() {
         setCredits(updatedCredits);
     };
 
-    // const calculateTimeLeft = (expiryDate) => {
-    //     const expirationTime = new Date(expiryDate).getTime();
-    //     const currentTime = new Date().getTime();
-    //     const timeDifference = expirationTime - currentTime;
-    
-    //     let status;
-    //     let remainingTime;
-    
-    //     if (timeDifference <= 0) {
-    //         status = 'Expired';
-    //         remainingTime = '';
-    //     } else {
-    //         status = 'Active';
-    //         remainingTime = timeDifference;
-    //     }
-    
-    //     return { status, remainingTime };
-    // };
     const calculateTimeLeft = (expiryDate) => {
         const expirationDate = new Date(expiryDate);
         const currentTime = new Date();
@@ -94,7 +75,7 @@ function Carbon_Credits() {
     
         if (expirationDate < currentTime) {
             status = 'Expired';
-            remainingTime = '';
+            remainingTime = null;
         } else {
             status = 'Active';
             remainingTime = expirationDate;
@@ -103,7 +84,6 @@ function Carbon_Credits() {
         return { status, remainingTime };
     };
     
-
     const columns = [
         {
             title: 'Credit Amount',

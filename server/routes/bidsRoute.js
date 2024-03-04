@@ -6,6 +6,8 @@ const authenticate = require("../middleware/authenticate");
 // place a new bid
 router.post("/place-new-bid", authenticate, async (req, res) => {
   const user = req.rootUser; // Assuming you have a valid user object in req.rootUser
+  user.rewardCredits += 5;
+  await user.save();
   const form = {
     ...req.body, // Assuming your form data is in the req.body
     buyer: user._id,
@@ -21,9 +23,12 @@ router.post("/place-new-bid", authenticate, async (req, res) => {
 
 // get all bids
 router.post("/get-all-bids", authenticate, async (req, res) => {
+  const user = req.rootUser;
+  user.rewardCredits += 5;
+  await user.save();
   try {
-    
     const { selectedSellCredit} = req.body;
+    console.log("sss", selectedSellCredit);
     let filters = {};
     if (selectedSellCredit) {
       filters.sellCredits = selectedSellCredit._id;;
