@@ -127,7 +127,7 @@ function Carbon_Credits() {
       title: "Expiration Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => <span>{status}</span>,
+      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor:  record.status === "Expired" ? "#FF7F50" :"greenyellow" }}>{text}</span>
     },
     {
       title: "Remaining Time",

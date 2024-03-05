@@ -40,6 +40,48 @@ const Dashboard = () => {
       setLoginData(data);
       dispatch(SetUser(data)); // Dispatch the sey User action
       navigate("/home");
+      getNotifications();
+    }
+  };
+
+  const getNotifications = async () => {
+    let token = localStorage.getItem("usersdatatoken");
+    try {
+      const resnotify = await fetch("/get-all-notifications", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+      if(resnotify.ok){
+        const responseData = await resnotify.json();
+        setNotifications(responseData.data);
+      }else{
+        throw new Error(resnotify.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+  const readNotifications = async () => {
+    let token = localStorage.getItem("usersdatatoken");
+    try {
+      const response = await fetch("/read-all-notifications", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+      if (response.ok) {
+        getNotifications();
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      message.error(error.message);
     }
   };
 
@@ -71,9 +113,11 @@ const Dashboard = () => {
       navigate("/login");
     }
   };
+
   useEffect(() => {
     DashboardValid();
   }, []);
+
   return (
     <div>
       <div className="flex justify-between items-center bg-primary p-5">
@@ -101,7 +145,10 @@ const Dashboard = () => {
             count={
               notifications?.filter((notification) => !notification.read).length
             }
-            onClick={() => setShowNotifications(true)}
+            onClick={() => {
+              setShowNotifications(true);
+              readNotifications(true);
+            }}
             className="cursor-pointer"
           >
             <Avatar
@@ -120,7 +167,7 @@ const Dashboard = () => {
         {
           <Notifications
             notifications={notifications}
-            //reloadNotifications={getNotifications}
+            reloadNotifications={getNotifications}
             showNotifications={showNotifications}
             setShowNotifications={setShowNotifications}
           />

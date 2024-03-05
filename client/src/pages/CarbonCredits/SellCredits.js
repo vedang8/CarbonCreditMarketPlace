@@ -83,7 +83,7 @@ function SellCredits() {
     {
       title: "Status",
       dataIndex: "status",
-      render: (text) => <span style={{ fontSize: '16px' }}>{text}</span>
+      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor: record.status === "rejected" ? "#FF7F50" :"greenyellow" }}>{text}</span>
     },
     {
       title: "Action",

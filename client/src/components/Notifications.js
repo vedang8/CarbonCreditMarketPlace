@@ -13,17 +13,26 @@ function Notifications({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const deleteNotification = async (id) => {
     try {
       dispatch(SetLoader(true));
-      // const response = await DeleteNotification(id);
-      // dispatch(SetLoader(false));
-      // if (response.success) {
-      //   message.success(response.message);
-      //   reloadNotifications();
-      // } else {
-      //   throw new Error(response.message);
-      // }
+      let token = localStorage.getItem("usersdatatoken");
+      const response = await fetch(`/delete-notification/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+      
+      dispatch(SetLoader(false));
+      if (response.ok) {
+        message.success(response.message);
+        reloadNotifications();
+      } else {
+        throw new Error(response.message);
+      }
     } catch (error) {
       dispatch(SetLoader(false));
       message.error(error.message);

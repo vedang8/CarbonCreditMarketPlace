@@ -105,6 +105,7 @@ function Credits() {
     {
       title: "Status",
       dataIndex: "status",
+      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor: record.status === "pending" ? "orange" : record.status === "rejected" || record.status === "blocked" ? "#FF7F50" :"greenyellow" }}>{text}</span>
     },
     {
       title: "Action",

@@ -22,9 +22,11 @@ router.post("/notify", authenticate, async (req, res) => {
 
 // get all notifications by user
 router.get("/get-all-notifications", authenticate, async (req, res) => {
+  const user = req.rootUser;
+  const userId = user._id;
   try {
     const notifications = await Notification.find({
-      user: req.body.userId,
+      user: userId,
     }).sort({ createdAt: -1 });
     res.send({
       success: true,
@@ -56,9 +58,11 @@ router.delete("/delete-notification/:id", authenticate, async (req, res) => {
 
 // read all notifications by user
 router.put("/read-all-notifications", authenticate, async (req, res) => {
+  const user = req.rootUser;
+  const userId = user._id;
   try {
     await Notification.updateMany(
-      { user: req.body.userId, read: false },
+      { user: userId, read: false },
       { $set: { read: true } }
     );
     res.send({

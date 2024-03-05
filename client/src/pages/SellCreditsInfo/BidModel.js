@@ -39,7 +39,7 @@ function BidModel({ showBidModal, setShowBidModal, sellCredit, reloadData }) {
         // send notification to seller
         const notifyUser = {
           title: "A new bid has been placed",
-          message: `A new bid has been placed on your carbon credits ${sellCredit?.data?.sellCredits} for $ ${formDataWithUser?.bidAmount}`,
+          message: `A new bid has been placed on your carbon credits 🪙${sellCredit?.data?.sellCredits} for 🫰🏻 $ ${formDataWithUser?.bidAmount}`,
           user: sellCredit?.data?.user?._id,
           onClick: `/profile`,
           read: false,
