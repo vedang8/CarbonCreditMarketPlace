@@ -2,7 +2,6 @@ import { message, Modal } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { DeleteNotification } from "../apicalls/notifications";
 import { useDispatch } from "react-redux";
 import { SetLoader } from "../redux/loadersSlice";
 
@@ -17,14 +16,14 @@ function Notifications({
   const deleteNotification = async (id) => {
     try {
       dispatch(SetLoader(true));
-      const response = await DeleteNotification(id);
-      dispatch(SetLoader(false));
-      if (response.success) {
-        message.success(response.message);
-        reloadNotifications();
-      } else {
-        throw new Error(response.message);
-      }
+      // const response = await DeleteNotification(id);
+      // dispatch(SetLoader(false));
+      // if (response.success) {
+      //   message.success(response.message);
+      //   reloadNotifications();
+      // } else {
+      //   throw new Error(response.message);
+      // }
     } catch (error) {
       dispatch(SetLoader(false));
       message.error(error.message);

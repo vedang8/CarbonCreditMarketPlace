@@ -14,12 +14,14 @@ app.use(cors());
 //     tempFileDir: "D:/Projects/CCMP/server/uploads",
 // }));
 const userRoute = require("./routes/userRoute");
+const creditsFormRoute = require("./routes/creditsFormRoute");
 const creditsRoute = require("./routes/creditsRoute");
 const sellCreditsRoute = require("./routes/sellCreditsRoute");
 const bidsRoute = require("./routes/bidsRoute");
 const notificationRoute = require("./routes/notificationRoute");
 
 app.use(userRoute);
+app.use(creditsFormRoute);
 app.use(creditsRoute);
 app.use(sellCreditsRoute);
 app.use(bidsRoute);

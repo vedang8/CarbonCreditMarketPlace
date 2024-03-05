@@ -7,8 +7,9 @@ import { SetUser } from "../redux/usersSlice";
 import Home from "./Home";
 import Profile from "./Profile";
 import Admin from "./Admin/index";
-import { message } from "antd";
+import { Badge, Avatar, message } from "antd";
 import SellCreditsInfo from "./SellCreditsInfo/index.js";
+import Notifications from "../components/Notifications.js";
 
 const Dashboard = () => {
   const { logindata, setLoginData } = useContext(LoginContext);
@@ -16,7 +17,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
-  const [notifications, setNotifications] = useState([]);
+  const [notifications = [], setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+
   const DashboardValid = async () => {
     dispatch(SetLoader(true));
     let token = localStorage.getItem("usersdatatoken");
@@ -81,7 +84,7 @@ const Dashboard = () => {
           CARBON CREDIT MARKET PLACE
         </h1>
         <div className="bg-white py-2 px-5 rounded flex gap-1 items-center">
-          <i className="ri-shield-user-line"></i>
+          {/* <i className="ri-shield-user-line"></i> */}
           <span
             className="underline cursor-pointer"
             onClick={() => {
@@ -94,7 +97,19 @@ const Dashboard = () => {
           >
             {logindata ? logindata.ValidUserOne.fname.toUpperCase() : ""}
           </span>
-          
+          <Badge
+            count={
+              notifications?.filter((notification) => !notification.read).length
+            }
+            onClick={() => setShowNotifications(true)}
+            className="cursor-pointer"
+          >
+            <Avatar
+              shape="circle"
+              size="medium"
+              icon={<i className="ri-notification-3-line"></i>}
+            />
+          </Badge>
           <i
             className="ri-logout-box-r-line ml-10 cursor-pointer"
             onClick={() => {
@@ -102,6 +117,14 @@ const Dashboard = () => {
             }}
           ></i>
         </div>
+        {
+          <Notifications
+            notifications={notifications}
+            //reloadNotifications={getNotifications}
+            showNotifications={showNotifications}
+            setShowNotifications={setShowNotifications}
+          />
+        }
       </div>
       <Routes>
         <Route>
