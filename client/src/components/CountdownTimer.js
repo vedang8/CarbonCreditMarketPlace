@@ -37,7 +37,7 @@ const CountdownTimer = ({ targetDate, status }) => {
               <div className="value">
                 <span>{value < 10 ? `0${value}` : value}</span>
               </div>
-              <span className="label"> {label} </span>
+              <span className="label dark"> {label} </span>
             </div>
           );
         })}
