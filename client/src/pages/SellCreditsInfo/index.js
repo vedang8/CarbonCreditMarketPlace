@@ -37,29 +37,28 @@ function SellCreditsInfo({selectedSellCredit}) {
         throw new Error("Failed to fetch sell credit details");
       }
       const sellCreditData = await sellCreditResponse.json();
-    
+      
+      console.log("selllll", sellCreditData);
       // Fetch all bids related to the selected sell credit
-      // const bidsResponse = await fetch(`/get-all-bids`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: token,
-      //   },
-      //   body: JSON.stringify({ selectedSellCredit: sellCreditData }), // Pass sell credit data as body
-      // });
-      // if (!bidsResponse.ok) {
-      //   throw new Error("Failed to fetch bids");
-      // }
-      // const bidsData = await bidsResponse.json();
-    
-      // // Combine sell credit data with bids data
-      // const updatedSellCredit = {
-      //   ...sellCreditData,
-      //   bids: bidsData.data, // Assuming bids are returned in the data field
-      // };
-    
+      const bidsResponse = await fetch(`/get-all-bids`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ selectedSellCredit: sellCreditData }), // Pass sell credit data as body
+      });
+      if (!bidsResponse.ok) {
+        throw new Error("Failed to fetch bids");
+      }
+      const bidsData = await bidsResponse.json();
+      // Combine sell credit data with bids data
+      const updatedSellCredit = {
+        ...sellCreditData,
+        bids: bidsData.data, // Assuming bids are returned in the data field
+      };
       // Update state with combined data
-      setSellCredit(sellCreditData);
+      setSellCredit(updatedSellCredit);
     } catch (error) {
       dispatch(SetLoader(false));
       message.error(error.message);
@@ -76,10 +75,10 @@ function SellCreditsInfo({selectedSellCredit}) {
   
   return (
     <>
-      <div>
-        <div className="grid grid-cols-2 gap-5 mt-5">
+      <div className="flex flex-col col-4 justify-center items-center">
+        <div>
           {/* images */}
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             {sellCredit && sellCredit.images && sellCredit.images.length > 0 ? (
               <img
                 src={sellCredit.images[selectedImageIndex]}
@@ -89,42 +88,35 @@ function SellCreditsInfo({selectedSellCredit}) {
             ) : (
               <p>No image available</p>
             )}
-          </div>
+          </div> */}
 
           {/* details */}
 
           <div className="flex flex-col">
             <div>
-              <h1 className="text-2xl font-semibold text-orange-900 mt-5">
-                {sellCredit?.data?.user?.fname}
-              </h1>
-            </div>
-
-            <div className="flex justify-between mt-2 mr-5 text-xl">
-              <span>Carbon Credits</span>
-              <span>{sellCredit?.data?.sellCredits}</span>
-            </div>
-            <div className="flex justify-between mt-2 mr-5 text-xl">
-              <span>Sell Before Date</span>
-              <span>{sellCredit?.data?.sellBeforeDate}</span>
-            </div>
-            <Divider />
-            <div>
               <h1 className="text-2xl font-semibold text-orange-900 mt-2">
                 Seller Details
               </h1>
             </div>
-            <div className="flex justify-between mt-2 mr-5 text-xl">
+            <div className="flex justify-between mt-2 text-xl">
               <span>Name</span>
-              <span className="uppercase">{sellCredit?.data?.user?.fname}</span>
+              <span className="uppercase" style={{ color: "white", backgroundColor: "#7b3f00" }}>{sellCredit?.data?.user?.fname}</span>
             </div>
-            <div className="flex justify-between mt-2 mr-5 text-xl">
+            <div className="flex justify-between mt-2 text-xl">
               <span>Email</span>
               <span>{sellCredit?.data?.user?.email}</span>
             </div>
+            <div className="flex justify-between mt-2 text-xl">
+              <span>Carbon Credits</span>
+              <span style={{ backgroundColor: "yellow" }}>🪙 {sellCredit?.data?.sellCredits}</span>
+            </div>
+            <div className="flex justify-between mt-2 text-xl">
+              <span>Sell Before Date</span>
+              <span>{sellCredit?.data?.sellBeforeDate}</span>
+            </div>
             <Divider />
             <div className="flex flex-col">
-              <div className="flex justify-between mt-2 mr-5">
+              <div className="flex justify-between mt-2">
                 <h1 className="text-2xl font-semibold text-orange-900">Bids</h1>
                 <Button
                   onClick={() => setShowAddNewBid(!showAddNewBid)}
@@ -134,7 +126,7 @@ function SellCreditsInfo({selectedSellCredit}) {
                 </Button>
               </div>
             </div>
-            {/* {
+            {  sellCredit.bids && 
                 sellCredit.bids.map((bid) => {
                   return (
                     <div className="border border-gray-300 border-solid p-3 rounded mt-5">
@@ -144,10 +136,10 @@ function SellCreditsInfo({selectedSellCredit}) {
                       </div>
                       <div className="flex justify-between text-gray-600">
                         <span>Bid Amount</span>
-                        <span> $ {bid.bidAmount}</span>
+                        <span> 🪙 {bid.bidAmount}</span>
                       </div>
                       <div className="flex justify-between text-gray-600">
-                        <span>Bid Place On</span>
+                        <span>Bid Placed On</span>
                         <span>
                           {" "}
                           {moment(bid.createdAt).format("MMM D , YYYY hh:mm A")}
@@ -155,7 +147,7 @@ function SellCreditsInfo({selectedSellCredit}) {
                       </div>
                     </div>
                   );
-                })} */}
+                })}
             {showAddNewBid && (
               <BidModel
                 sellCredit={sellCredit}
@@ -164,12 +156,6 @@ function SellCreditsInfo({selectedSellCredit}) {
                 setShowBidModal={setShowAddNewBid}
               />
             )}
-          </div>
-          <div className="text-grey-900 ml-5">
-            <h1>Added On</h1>
-            <span>
-              {moment(sellCredit?.data?.createdAt).format("MMM D, YYYY hh:mm A")}
-            </span>
           </div>
         </div>
       </div>

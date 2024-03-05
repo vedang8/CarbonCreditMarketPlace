@@ -31,8 +31,8 @@ router.post("/get-all-bids", authenticate, async (req, res) => {
     console.log("sss", selectedSellCredit);
     let filters = {};
     if (selectedSellCredit) {
-      filters.sellCredits = selectedSellCredit._id;;
-      filters.seller = selectedSellCredit.user;
+      filters.sellCredits = selectedSellCredit.data._id;;
+      filters.seller = selectedSellCredit.data.user;
     }
     console.log("filters", filters);
     const bids = await Bid.find(filters)
