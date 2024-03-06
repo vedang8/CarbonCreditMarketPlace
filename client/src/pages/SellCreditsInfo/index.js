@@ -40,7 +40,7 @@ function SellCreditsInfo({selectedSellCredit}) {
       
       console.log("selllll", sellCreditData);
       // Fetch all bids related to the selected sell credit
-      const bidsResponse = await fetch(`/get-all-bids`, {
+      const bidsResponse = await fetch(`/get-all-bids-for-all-users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

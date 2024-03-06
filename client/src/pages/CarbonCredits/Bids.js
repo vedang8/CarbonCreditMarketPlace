@@ -13,12 +13,12 @@ function Bids({
 
   const [bidsData, setBidsData] = useState([]);
   const dispatch = useDispatch();
-  
+  console.log("selelle", selectedSellCredit);
   const getData = async () => {
     try {
         const token = localStorage.getItem("usersdatatoken");
         dispatch(SetLoader(true));
-        const response = await fetch(`/get-all-bids`, {
+        const response = await fetch(`/get-particular-all-bids`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

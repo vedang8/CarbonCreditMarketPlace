@@ -59,6 +59,29 @@ const StyledTab = (props) => (
 
 export default function Profile() {
   const [value, setValue] = React.useState(0);
+  const [rewardCredits, setRewardCredits] = React.useState(0);
+  
+  const fetchRewardCredits = async () => {
+    try{
+      const token = localStorage.getItem("usersdatatoken");
+      const res = await fetch("/get-reward-credits-user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+      const data = await res.json();
+      setRewardCredits(data.reward_credits);
+    }catch(error){
+      console.log(error.message);
+    }
+  };
+
+  React.useEffect(()=> {
+    // fetching rewardcredits
+    fetchRewardCredits();
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -76,7 +99,7 @@ export default function Profile() {
           >
             <StyledTab label="My Forms" {...a11yProps(0)} $isSelected={value === 0} />
             <StyledTab label="Credits" {...a11yProps(1)} $isSelected={value === 1} />
-            <StyledTab label="Seller" {...a11yProps(2)} $isSelected={value === 2} />
+            <StyledTab label="Seller" {...a11yProps(2)} disabled={rewardCredits < 500} title={rewardCredits < 500 ? "Insufficient reward credits" : null} />
             <StyledTab label="Bids" {...a11yProps(3)} $isSelected={value === 3} />
           </Tabs>
         </Box>

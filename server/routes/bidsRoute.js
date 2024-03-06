@@ -22,7 +22,7 @@ router.post("/place-new-bid", authenticate, async (req, res) => {
 });
 
 // get all bids
-router.post("/get-all-bids", authenticate, async (req, res) => {
+router.post("/get-all-bids-for-all-users", authenticate, async (req, res) => {
   const user = req.rootUser;
   user.rewardCredits += 5;
   await user.save();
@@ -31,8 +31,32 @@ router.post("/get-all-bids", authenticate, async (req, res) => {
     console.log("sss", selectedSellCredit);
     let filters = {};
     if (selectedSellCredit) {
-      filters.sellCredits = selectedSellCredit.data._id;;
+      filters.sellCredits = selectedSellCredit.data._id;
       filters.seller = selectedSellCredit.data.user;
+    }
+    console.log("filters", filters);
+    const bids = await Bid.find(filters)
+      .populate("sellCredits")
+      .populate("buyer")
+      .populate("seller")
+      .sort({ createdAt: -1 });
+    res.send({ success: true, data: bids });
+  } catch (error) {
+    res.send({ success: false, message: error.message });
+  }
+});
+
+router.post("/get-particular-all-bids", authenticate, async (req, res) => {
+  const user = req.rootUser;
+  user.rewardCredits += 5;
+  await user.save();
+  try {
+    const { selectedSellCredit} = req.body;
+    console.log("sss", selectedSellCredit);
+    let filters = {};
+    if (selectedSellCredit) {
+      filters.sellCredits = selectedSellCredit._id;
+      filters.seller = selectedSellCredit.user;
     }
     console.log("filters", filters);
     const bids = await Bid.find(filters)
