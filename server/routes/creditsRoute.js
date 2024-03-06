@@ -65,7 +65,6 @@ router.post("/assign-credits/:userId", authenticate, async(req, res) => {
 
 // getting all the credits earned 
 router.get("/get-credits/user", authenticate, async(req, res) => {
-
     try{
       const user = req.rootUser;
       const userId = user._id; // Access user ID directly from req.user

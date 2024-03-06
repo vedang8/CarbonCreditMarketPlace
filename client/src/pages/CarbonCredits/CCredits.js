@@ -38,7 +38,8 @@ function Carbon_Credits() {
       });
 
       setCredits(updatedCredits);
-      setTotalCredits(updatedCredits.reduce((total, credit) => total + credit.amount, 0));
+      const activeApprovedCredits = updatedCredits.filter(credit => credit.status === "Active");
+      setTotalCredits(activeApprovedCredits.reduce((total, credit) => total + credit.amount, 0));
 
       const rewardCreditsResponse = await fetch("/get-reward-credits-user", {
         method: "GET",
