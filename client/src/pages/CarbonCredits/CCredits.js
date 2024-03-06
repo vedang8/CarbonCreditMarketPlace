@@ -119,6 +119,11 @@ function Carbon_Credits() {
 
   const columns = [
     {
+      title: "Project Name",
+      dataIndex: "projectName",
+      key: "projectName",
+    },
+    {
       title: "Credit Amount",
       dataIndex: "amount",
       key: "amount",

@@ -6,6 +6,10 @@ const creditsSchema = new mongoose.Schema({
         ref: "users",
         required: true,
     },
+    projectName: {
+        type: "string",
+        required: true,
+    },
     amount: {
         type: Number,
         required: true,

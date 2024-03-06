@@ -174,13 +174,13 @@ function Credits() {
         const approvedForm = formData.data;
 
         const credits = calculateCredits(approvedForm);
-        console.log("credits", credits);
 
         message.success("Carbon Credits are generated");
         
         const ed = approvedForm.endDate;
-        console.log("End Date:", ed);
-        assignCreditsToUser(approvedForm.user, credits, ed);
+        const projectName = approvedForm.projectName;
+
+        assignCreditsToUser(approvedForm.user, projectName, credits, ed);
 
       } else {
         message.error("Internal server error");
@@ -231,13 +231,13 @@ function Credits() {
     console.log("Total Emissions Avoided:", tea);
 
     // converting emissions avoided to carbon credits
-    const carbon_credits = tea * 0.0001; // 0.0001 is the conversion factor
+    const carbon_credits = tea * 0.001; // 0.001 is the conversion factor
     console.log("Carbon Credits:", carbon_credits);
 
     return carbon_credits;
   }
 
-  const assignCreditsToUser = async (user, credits, ed) => {
+  const assignCreditsToUser = async (user, projectName, credits, ed) => {
     try{
       const token = localStorage.getItem("usersdatatoken");
       const response = await fetch(`/update-user-credits/${user._id}`, {
@@ -261,7 +261,7 @@ function Credits() {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({credits, ed}),
+        body: JSON.stringify({projectName, credits, ed}),
       });
       const data2 = await res2.json();
       if(res2.ok){

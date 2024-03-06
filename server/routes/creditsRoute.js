@@ -39,12 +39,12 @@ router.put("/update-user-credits/:userId", authenticate, async (req,res) => {
 router.post("/assign-credits/:userId", authenticate, async(req, res) => {
   try{
     const { userId } = req.params;
-    const { credits, ed } = req.body;
+    const { projectName, credits, ed } = req.body;
     
-    console.log("expiru date: ",  ed);
     // creating a new credits document
     const newCredit = new creditdb({
       user: userId,
+      projectName: projectName,
       amount: credits,
       expiryDate: ed,
       status: "active"
