@@ -122,6 +122,7 @@ function Carbon_Credits() {
       title: "Project Name",
       dataIndex: "projectName",
       key: "projectName",
+      render: (text) => <span style={{ fontSize: '16px', color: "#652A0E", backgroundColor: "#FFF39A"}}>{text}</span>
     },
     {
       title: "Credit Amount",
@@ -132,7 +133,7 @@ function Carbon_Credits() {
       title: "Expiration Status",
       dataIndex: "status",
       key: "status",
-      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor:  record.status === "Expired" ? "#FF7F50" :"greenyellow" }}>{text}</span>
+      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor:  record.status === "Expired" ? "#FF7F50" :"greenyellow", color:  record.status === "Expired" ? "#FF7F50" :"123524"}}>{text}</span>
     },
     {
       title: "Remaining Time",
