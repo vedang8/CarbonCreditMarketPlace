@@ -3,12 +3,19 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const fileupload = require("express-fileupload");
+const morgan = require("morgan");
 require("./db/conn");
 const port = 8009;
+
+// Creating a write stream for logging
+const accessLogStream = fs.createWriteStream('access.log', { flags: 'a' });
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+// Using morgan middleware to log incoming requests
+app.use(morgan('combined', { stream: accessLogStream }));
+
 // app.use(fileupload({
 //     useTempFiles: true,
 //     tempFileDir: "D:/Projects/CCMP/server/uploads",

@@ -32,7 +32,12 @@ const Home = () => {
         dispatch(SetLoader(false))
         const data = await response.json();
         if(response.ok){
-          setForms(data.forms);
+          const curr = new Date();
+          const filteredForms = data.forms.filter((form) => {
+            const sellBeforeDate = new Date(form.sellBeforeDate);
+            return sellBeforeDate >= curr;
+          });
+          setForms(filteredForms);
         }else{
           throw new Error(data.message || 'Failed to fetch data');
         }

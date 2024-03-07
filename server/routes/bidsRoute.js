@@ -2,7 +2,9 @@ const express = require("express");
 const router = new express.Router();
 const Bid = require("../models/bid");
 const authenticate = require("../middleware/authenticate");
+const morgan = require("morgan");
 
+router.use(morgan("combined"));
 // place a new bid
 router.post("/place-new-bid", authenticate, async (req, res) => {
   const user = req.rootUser; // Assuming you have a valid user object in req.rootUser

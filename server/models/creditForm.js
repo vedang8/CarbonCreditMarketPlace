@@ -45,7 +45,6 @@ const creditFormSchema = new mongoose.Schema(
         images: {
             type: Array,
             default: [],
-            
         },
         user:{
             type: mongoose.Schema.Types.ObjectId,

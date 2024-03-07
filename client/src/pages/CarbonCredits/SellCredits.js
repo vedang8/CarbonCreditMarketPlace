@@ -91,7 +91,7 @@ function SellCredits() {
       render: (text, record) => {
         return (
           <div className="flex gap-5 items-center">
-            <i
+            <i style={{ color: "red"}}
               className="ri-delete-bin-line cursor-pointer"
               onClick={() => {
                 handleDeleteClick(record);

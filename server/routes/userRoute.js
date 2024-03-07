@@ -3,6 +3,9 @@ const router = new express.Router();
 const userdb = require("../models/user");
 const bcrypt = require("bcryptjs");
 const authenticate = require("../middleware/authenticate");
+const morgan = require("morgan");
+
+router.use(morgan("combined"));
 
 // for user registration
 router.post("/register", async(req, res) =>{

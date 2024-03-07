@@ -11,7 +11,9 @@ const { uploadImageCloudinary } = require("../db/uploadClodinary");
 const userdb = require("../models/user");
 const creditdb = require("../models/credits");
 const { serialize } = require("v8");
+const morgan = require("morgan");
 
+router.use(morgan("combined"));
 // create a new credit generation form
 router.post("/credit-forms", authenticate, async (req, res) => {
   const user = req.rootUser; // Assuming you have a valid user object in req.rootUser

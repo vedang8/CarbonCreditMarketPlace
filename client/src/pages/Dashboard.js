@@ -35,7 +35,7 @@ const Dashboard = () => {
     console.log("user data", data.ValidUserOne);
     dispatch(SetLoader(false));
     if (data.status === 401 || !data) {
-      navigate("*");
+      navigate("/login");
     } else {
       setLoginData(data);
       dispatch(SetUser(data)); // Dispatch the sey User action
