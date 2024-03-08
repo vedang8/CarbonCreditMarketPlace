@@ -54,10 +54,10 @@ const Dashboard = () => {
           Authorization: token,
         },
       });
-      if(resnotify.ok){
+      if (resnotify.ok) {
         const responseData = await resnotify.json();
         setNotifications(responseData.data);
-      }else{
+      } else {
         throw new Error(resnotify.message);
       }
     } catch (error) {
@@ -109,7 +109,6 @@ const Dashboard = () => {
       localStorage.removeItem("usersdatatoken");
       setLoginData(false);
       message.success("Logged out Successfully");
-      message.success("🪙 1 Credit rewarded! 🎊");
       navigate("/login");
     }
   };

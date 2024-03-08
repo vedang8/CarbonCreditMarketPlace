@@ -2,9 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const Bid = require("../models/bid");
 const authenticate = require("../middleware/authenticate");
-const morgan = require("morgan");
 
-router.use(morgan("combined"));
 // place a new bid
 router.post("/place-new-bid", authenticate, async (req, res) => {
   const user = req.rootUser; // Assuming you have a valid user object in req.rootUser
@@ -25,9 +23,6 @@ router.post("/place-new-bid", authenticate, async (req, res) => {
 
 // get all bids
 router.post("/get-all-bids-for-all-users", authenticate, async (req, res) => {
-  const user = req.rootUser;
-  user.rewardCredits += 5;
-  await user.save();
   try {
     const { selectedSellCredit} = req.body;
     console.log("sss", selectedSellCredit);
@@ -50,8 +45,6 @@ router.post("/get-all-bids-for-all-users", authenticate, async (req, res) => {
 
 router.post("/get-particular-all-bids", authenticate, async (req, res) => {
   const user = req.rootUser;
-  user.rewardCredits += 5;
-  await user.save();
   try {
     const { selectedSellCredit} = req.body;
     console.log("sss", selectedSellCredit);

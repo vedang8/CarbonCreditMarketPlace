@@ -1,13 +1,13 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Credits from './CarbonCredits/Credits';
-import Carbon_Credits from './CarbonCredits/CCredits';
-import SellCredits from './CarbonCredits/SellCredits';
+import * as React from "react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Credits from "./CarbonCredits/Credits";
+import Carbon_Credits from "./CarbonCredits/CCredits";
+import SellCredits from "./CarbonCredits/SellCredits";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,7 +38,7 @@ CustomTabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -47,22 +47,21 @@ const theme = createTheme();
 const StyledTab = (props) => (
   <Tab
     sx={{
-      color: props.$isSelected ? 'green' : 'inherit',
-      '&.Mui-selected': {
-        color: 'green',
+      color: props.$isSelected ? "green" : "inherit",
+      "&.Mui-selected": {
+        color: "green",
       },
     }}
     {...props}
   />
 );
 
-
 export default function Profile() {
   const [value, setValue] = React.useState(0);
   const [rewardCredits, setRewardCredits] = React.useState(0);
-  
+
   const fetchRewardCredits = async () => {
-    try{
+    try {
       const token = localStorage.getItem("usersdatatoken");
       const res = await fetch("/get-reward-credits-user", {
         method: "GET",
@@ -73,12 +72,12 @@ export default function Profile() {
       });
       const data = await res.json();
       setRewardCredits(data.reward_credits);
-    }catch(error){
+    } catch (error) {
       console.log(error.message);
     }
   };
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     // fetching rewardcredits
     fetchRewardCredits();
   }, []);
@@ -89,26 +88,43 @@ export default function Profile() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
-            TabIndicatorProps={{ style: { backgroundColor: 'green' } }}
+            TabIndicatorProps={{ style: { backgroundColor: "green" } }}
           >
-            <StyledTab label="My Forms" {...a11yProps(0)} $isSelected={value === 0} />
-            <StyledTab label="Credits" {...a11yProps(1)} $isSelected={value === 1} />
-            <StyledTab label="Seller" {...a11yProps(2)} disabled={rewardCredits < 500} title={rewardCredits < 500 ? "Insufficient reward credits" : null} />
-            <StyledTab label="Bids" {...a11yProps(3)} $isSelected={value === 3} />
+            <StyledTab
+              label="My Forms"
+              {...a11yProps(0)}
+              $isSelected={value === 0}
+            />
+            <StyledTab
+              label="Credits"
+              {...a11yProps(1)}
+              $isSelected={value === 1}
+            />
+            <StyledTab
+              label="Seller"
+              {...a11yProps(2)}
+              disabled={rewardCredits < 100}
+              title={rewardCredits < 100 ? "Insufficient reward credits" : null}
+            />
+            <StyledTab
+              label="Bids"
+              {...a11yProps(3)}
+              $isSelected={value === 3}
+            />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
           {/* Content for Carbon Credits tab */}
-          < Credits />
+          <Credits />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          < Carbon_Credits />
+          <Carbon_Credits />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
           <SellCredits />

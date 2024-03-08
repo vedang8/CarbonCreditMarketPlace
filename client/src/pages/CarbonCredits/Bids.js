@@ -27,8 +27,6 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
       if (response.ok) {
         const data = await response.json();
         console.log("dataaa", data);
-        message.success("🪙5 Credits are rewarded! 🎊");
-
         setBidsData(data.data);
       }
     } catch (error) {

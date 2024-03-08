@@ -34,12 +34,12 @@ function BidModel({ showBidModal, setShowBidModal, sellCredit, reloadData }) {
 
       if (response.ok) {
         message.success("Bid added successfully");
-        message.success("🪙5 Credits are rewarded! 🎊");
+        message.success("🪙5 points are rewarded! 🎊");
 
         // send notification to seller
         const notifyUser = {
           title: "A new bid has been placed",
-          message: `A new bid has been placed on your carbon credits 🪙${sellCredit?.data?.sellCredits} for 🫰🏻 ₹ ${formDataWithUser?.bidAmount}`,
+          message: `A new bid has been placed on your carbon credits ${sellCredit?.data?.sellCredits} for 🫰🏻 ₹ ${formDataWithUser?.bidAmount}`,
           user: sellCredit?.data?.user?._id,
           onClick: `/profile`,
           read: false,

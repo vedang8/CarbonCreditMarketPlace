@@ -60,8 +60,6 @@ router.get("/get-credit-forms", async (req, res) => {
 
 // edit form
 router.put("/edit-credit-forms/:id", authenticate, async (req, res) => {
-  const user = req.rootUser;
-
   try {
     const { id } = req.params;
     if (!ObjectId.isValid(id)) {
@@ -89,9 +87,6 @@ router.put("/edit-credit-forms/:id", authenticate, async (req, res) => {
 
 // delete the form
 router.delete("/delete-credit-forms/:id", authenticate, async (req, res) => {
-  const user = req.rootUser;
-  user.rewardCredits += 5;
-  await user.save();
   try {
     await CreditForm.findByIdAndDelete(req.params.id);
     res.send({

@@ -16,7 +16,7 @@ function Carbon_Credits() {
   const fetchCredits = async () => {
     try {
       setLoading(true);
-      dispatch(SetLoader(true))
+      dispatch(SetLoader(true));
       const token = localStorage.getItem("usersdatatoken");
       const creditsResponse = await fetch("/get-credits/user", {
         method: "GET",
@@ -38,8 +38,15 @@ function Carbon_Credits() {
       });
 
       setCredits(updatedCredits);
-      const activeApprovedCredits = updatedCredits.filter(credit => credit.status === "Active");
-      setTotalCredits(activeApprovedCredits.reduce((total, credit) => total + credit.amount, 0));
+      const activeApprovedCredits = updatedCredits.filter(
+        (credit) => credit.status === "Active"
+      );
+      setTotalCredits(
+        activeApprovedCredits.reduce(
+          (total, credit) => total + credit.amount,
+          0
+        )
+      );
 
       const rewardCreditsResponse = await fetch("/get-reward-credits-user", {
         method: "GET",
@@ -65,7 +72,7 @@ function Carbon_Credits() {
 
   useEffect(() => {
     fetchCredits();
-
+    updateCredits();
     const interval = setInterval(fetchCredits, 60000);
 
     return () => clearInterval(interval);
@@ -73,7 +80,9 @@ function Carbon_Credits() {
 
   const updateCredits = async () => {
     try {
-      const expiredCredits = credits.filter((credit) => credit.status === "Expired");
+      const expiredCredits = credits.filter(
+        (credit) => credit.status === "Expired"
+      );
 
       if (expiredCredits.length > 0) {
         const token = localStorage.getItem("usersdatatoken");
@@ -89,7 +98,7 @@ function Carbon_Credits() {
         });
 
         if (response.ok) {
-          console.log("Credits status updated in the database");
+          console.log("Credits status updated");
         } else {
           throw new Error("Failed to update credits status in the database");
         }
@@ -123,7 +132,17 @@ function Carbon_Credits() {
       title: "Project Name",
       dataIndex: "projectName",
       key: "projectName",
-      render: (text) => <span style={{ fontSize: '16px', color: "#652A0E", backgroundColor: "#FFF39A"}}>{text}</span>
+      render: (text) => (
+        <span
+          style={{
+            fontSize: "16px",
+            color: "#652A0E",
+            backgroundColor: "#FFF39A",
+          }}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "Credit Amount",
@@ -134,7 +153,18 @@ function Carbon_Credits() {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor:  record.status === "Expired" ? "#FF7F50" :"greenyellow", color:  record.status === "Expired" ? "#FF7F50" :"123524"}}>{text}</span>
+      render: (text, record) => (
+        <span
+          style={{
+            fontSize: "16px",
+            backgroundColor:
+              record.status === "Expired" ? "#FF7F50" : "greenyellow",
+            color: record.status === "Expired" ? "#FF7F50" : "123524",
+          }}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "Remaining Time",
@@ -142,7 +172,11 @@ function Carbon_Credits() {
       key: "expiryDate",
       render: (expiryDate, record) => {
         const { status, remainingTime } = calculateTimeLeft(expiryDate);
-        return status === "Active" ? <CountdownTimer targetDate={remainingTime} /> : <span>{record.status}</span>;
+        return status === "Active" ? (
+          <CountdownTimer targetDate={remainingTime} />
+        ) : (
+          <span>{record.status}</span>
+        );
       },
     },
   ];
