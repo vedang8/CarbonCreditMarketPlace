@@ -159,7 +159,8 @@ function Credits() {
             },
           });
           if(res.ok){
-            message.success(res.message);
+            const data1 = await response.json();
+            message.success(data1.message);
           }
         }
         dispatch(SetLoader(false));
@@ -239,7 +240,7 @@ function Credits() {
     console.log("Total Emissions Avoided:", tea);
 
     // converting emissions avoided to carbon credits
-    const carbon_credits = tea * 0.001; // 0.001 is the conversion factor
+    const carbon_credits = tea * (0.001).toFixed(4);; // 0.001 is the conversion factor
     console.log("Carbon Credits:", carbon_credits);
 
     return carbon_credits;

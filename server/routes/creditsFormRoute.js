@@ -12,6 +12,7 @@ const userdb = require("../models/user");
 const creditdb = require("../models/credits");
 const { serialize } = require("v8");
 const PDFDocument = require('pdfkit');
+const nodemailer = require('nodemailer');
 
 // create a new credit generation form
 router.post("/credit-forms", authenticate, async (req, res) => {
@@ -237,7 +238,8 @@ router.put(
 router.post("/generate-certificate/:id", authenticate, async (req, res) => {
   const user = req.rootUser;
   try {
-    const creditForm = await CreditForm.findById(req.params.id);
+    const creditForm = await genform.findById(req.params.id);
+    console.log("cccrreeddiittsss", creditForm);
     // Generate certificate PDF
     const pdfDoc = new PDFDocument();
     const certificatesDirectory = './certificates';
@@ -313,10 +315,33 @@ router.post("/generate-certificate/:id", authenticate, async (req, res) => {
     pdfDoc.end();
 
     // Once the PDF is written, respond with success message
-    writeStream.on("finish", () => {
+    writeStream.on("finish", async () => {
+      // Create a Nodemailer transporter
+      let transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'vedang2607@gmail.com', // Your Gmail email address
+          pass: 'riiiwuklihrxljuw', // Your Gmail password
+        },
+      });
+
+      // Send mail with attachment
+      let info = await transporter.sendMail({
+        from: 'vedang2607@gmail.com', // Your Gmail email address
+        to: 'vedang2607@gmail.com', // User's email address
+        subject: 'Your Carbon Credit Certificate',
+        text: 'Please find your Carbon Credit Certificate attached.',
+        attachments: [
+          {
+            filename: 'certificate.pdf',
+            path: filePath,
+          },
+        ],
+      });
+      console.log('Email sent: ', info.response);
       res.send({
         success: true,
-        message: "Certificate generated successfully",
+        message: "Certificate generated successfully and sent to user email",
       });
     });
   } catch (error) {
