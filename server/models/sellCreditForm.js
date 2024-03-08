@@ -24,6 +24,11 @@ const sellCreditFormSchema = new mongoose.Schema(
             default: "Pending",
             required: true,
         },
+        selling_status: {
+            type: String,
+            default: "Pending",
+            required: true,
+        }
     },
     {timestamps: true}
 );

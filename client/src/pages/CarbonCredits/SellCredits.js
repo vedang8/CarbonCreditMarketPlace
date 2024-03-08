@@ -81,6 +81,11 @@ function SellCredits() {
       render: (sellBeforeDate, record) => <CountdownTimer targetDate={sellBeforeDate} status={record.status} />
     },
     {
+      title: "Selling Status",
+      dataIndex: "selling_status",
+      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor: record.status === "rejected" ? "#FF7F50" :"greenyellow" }}>{text}</span>
+    },
+    {
       title: "Status",
       dataIndex: "status",
       render: (text, record) => <span style={{ fontSize: '16px', backgroundColor: record.status === "rejected" ? "#FF7F50" :"greenyellow" }}>{text}</span>

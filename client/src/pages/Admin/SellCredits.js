@@ -45,34 +45,34 @@ function SellCredits() {
           const { status, _id } = record;
           return (
             <div className="flex gap-5">
-              {status === "pending" && (
+              {status === "Pending" && (
                 <span
                   className="underline cursor-pointer"
-                  onClick={() => onStatusUpdate(_id, "approved")}
+                  onClick={() => onStatusUpdate(_id, "Approved")}
                 >
                   Approve
                 </span>
               )}
-              {status === "pending" && (
+              {status === "Pending" && (
                 <span
                   className="underline cursor-pointer"
-                  onClick={() => onStatusUpdate(_id, "rejected")}
+                  onClick={() => onStatusUpdate(_id, "Rejected")}
                 >
                   Reject
                 </span>
               )}
-              {status === "approved" && (
+              {status === "Approved" && (
                 <span
                   className="underline cursor-pointer"
-                  onClick={() => onStatusUpdate(_id, "blocked")}
+                  onClick={() => onStatusUpdate(_id, "Blocked")}
                 >
                   Block
                 </span>
               )}
-              {status === "blocked" && (
+              {status === "Blocked" && (
                 <span
                   className="underline cursor-pointer"
-                  onClick={() => onStatusUpdate(_id, "approved")}
+                  onClick={() => onStatusUpdate(_id, "Approved")}
                 >
                   Unblock
                 </span>
