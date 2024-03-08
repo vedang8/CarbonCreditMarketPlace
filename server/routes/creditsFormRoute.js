@@ -11,6 +11,7 @@ const { uploadImageCloudinary } = require("../db/uploadClodinary");
 const userdb = require("../models/user");
 const creditdb = require("../models/credits");
 const { serialize } = require("v8");
+const PDFDocument = require('pdfkit');
 
 // create a new credit generation form
 router.post("/credit-forms", authenticate, async (req, res) => {
@@ -234,10 +235,17 @@ router.put(
 
 // generate certificate
 router.post("/generate-certificate/:id", authenticate, async (req, res) => {
+  const user = req.rootUser;
   try {
     const creditForm = await CreditForm.findById(req.params.id);
     // Generate certificate PDF
     const pdfDoc = new PDFDocument();
+    const certificatesDirectory = './certificates';
+
+    // Check if the directory exists, if not, create it
+    if (!fs.existsSync(certificatesDirectory)) {
+        fs.mkdirSync(certificatesDirectory);
+    }
     const filePath = `./certificates/${creditForm._id}.pdf`; // Path to save the PDF
     const writeStream = fs.createWriteStream(filePath); // Create write stream
 
@@ -249,49 +257,58 @@ router.post("/generate-certificate/:id", authenticate, async (req, res) => {
 
     // Set font and font size
     pdfDoc.font("Helvetica-Bold");
-    pdfDoc.fontSize(24);
 
     // Adding content to the PDF
-    pdfDoc.text("Carbon Credit Certificate", { align: "center" });
+    pdfDoc.fontSize(24).fillColor("#000").text("Carbon Credit Certificate", { align: "center" });
 
     // Add separator line
-    pdfDoc
-      .moveDown()
-      .strokeColor("#000")
-      .lineWidth(1)
-      .moveTo(50, pdfDoc.y)
-      .lineTo(550, pdfDoc.y)
-      .stroke();
+    // pdfDoc
+    //   .moveDown()
+    //   .strokeColor("#000")
+    //   .lineWidth(1)
+    //   .moveTo(50, pdfDoc.y)
+    //   .lineTo(550, pdfDoc.y)
+    //   .stroke();
+    
+    // Reset font size for regular text
+    pdfDoc.font('Helvetica');
+    pdfDoc.fontSize(16);
+    pdfDoc.moveDown();
 
-    // Reset font and font size
-    pdfDoc.font("Helvetica");
-    pdfDoc.fontSize(14);
-
-    pdfDoc.moveDown().text(`Project Name: ${creditForm.projectName}`);
+    pdfDoc.text(`This certifies that ${creditForm.projectName}, a project initiated by ${creditForm.user.fname}, has successfully contributed to reducing carbon emissions in accordance with the principles of the Carbon Credit Marketplace.`);
+    
+    pdfDoc.moveDown();
+    pdfDoc.fontSize(16).text(`Project Details:`);
+    pdfDoc.moveDown();
+    // Adding text content
+    pdfDoc.fontSize(14).fillColor("#000").text(`Project Name: ${creditForm.projectName}`);
     pdfDoc.text(`Project Type: ${creditForm.projectType}`);
     pdfDoc.text(`Description: ${creditForm.description}`);
     pdfDoc.text(`Start Date: ${creditForm.startDate}`);
     pdfDoc.text(`End Date: ${creditForm.endDate}`);
+    // Add more text content here
+    pdfDoc.moveDown();
+    pdfDoc.fontSize(16).text(`Carbon Reduction Metrics:`);
+    pdfDoc.moveDown();
+    // Add environmental impact details
+    pdfDoc.fillColor("#000").fontSize(14).text(`Baseline Emission Amount: ${creditForm.baselineEmissionAmount} tons CO2`);
+    pdfDoc.text(`Project Emission Amount: ${creditForm.projectEmissionAmount} tons CO2`);
+    pdfDoc.text(`Reduction Achieved: ${creditForm.baselineEmissionAmount - creditForm.projectEmissionAmount} tons CO2`);
+    
+    pdfDoc.moveDown();
+    pdfDoc.fontSize(16).text(`Environmental Impact:`);
+    pdfDoc.moveDown();
 
-    pdfDoc
-      .moveDown()
-      .text(
-        `Baseline Emission Amount: ${creditForm.baselineEmissionAmount} tons CO2`
-      );
-    pdfDoc.text(
-      `Project Emission Amount: ${creditForm.projectEmissionAmount} tons CO2`
-    );
-    pdfDoc.text(
-      `Reduction Achieved: ${
-        creditForm.baselineEmissionAmount - creditForm.projectEmissionAmount
-      } tons CO2`
-    );
-    pdfDoc.text(`Number of Trees Planted: ${creditForm.numOfTrees}`);
-    pdfDoc.text(
-      `Number of Solar Panels Installed: ${creditForm.numOfSolarPanels}`
-    );
+    pdfDoc.fontSize(14).text(`Number of Trees Planted: ${creditForm.numOfTrees}`);
+    pdfDoc.text(`Number of Solar Panels Installed: ${creditForm.numOfSolarPanels}`);
     pdfDoc.text(`Electricity Generated: ${creditForm.electricity} kWh`);
-
+    
+    pdfDoc.moveDown();
+    pdfDoc.text(`This certificate acknowledges the positive environmental impact of the project, which includes the reduction of carbon emissions and the implementation of sustainable practices.`);
+    pdfDoc.opacity(0.3).text('Confidential', 50, 50, { rotation: 45, opacity: 0.3 }); // Add a watermark text
+    pdfDoc.moveDown();
+    
+    pdfDoc.text(`${user.fname}`);
     // Finalize PDF
     pdfDoc.end();
 

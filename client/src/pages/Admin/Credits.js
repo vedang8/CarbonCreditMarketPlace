@@ -145,16 +145,24 @@ function Credits() {
         },
         body: JSON.stringify({ status }),
       });
-
-      dispatch(SetLoader(false));
-
       if (response.ok) {
         const data = await response.json();
         message.success(data.message);
         getData();
         if (status === "approved") {
           generateAndAssignCredits(id);
+          const res = await fetch(`/generate-certificate/${id}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+          });
+          if(res.ok){
+            message.success(res.message);
+          }
         }
+        dispatch(SetLoader(false));
       } else {
         throw new Error("Error updating form status");
       }
