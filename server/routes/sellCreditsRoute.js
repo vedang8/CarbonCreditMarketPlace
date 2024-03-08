@@ -9,9 +9,7 @@ const { uploadImageCloudinary } = require("../db/uploadClodinary");
 const userdb = require("../models/user");
 const creditdb = require("../models/credits");
 const { serialize } = require("v8");
-const morgan = require("morgan");
 
-router.use(morgan("combined"));
 // create a new sell credit form
 router.post("/sell-credit-forms", authenticate, async (req, res) => {
   const user = req.rootUser; // Assuming you have a valid user object in req.rootUser
@@ -121,5 +119,51 @@ router.put("/update-sell-credits-forms-status/:id", authenticate, async (req, re
   }
 }
 );
+
+// edit form
+router.put("/edit-sell-credit-forms/:id", authenticate, async (req, res) => {
+  const user = req.rootUser;
+
+  try {
+    const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid ID format" });
+    }
+
+    // update the form
+    const updatedForm = await SellCreditForm.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    res.send({
+      success: true,
+      message: "Form Updated Successfully",
+      updatedForm,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// delete the form
+router.delete("/delete-sell-credit-forms/:id", authenticate, async (req, res) => {
+  const user = req.rootUser;
+  try {
+    await SellCreditForm.findByIdAndDelete(req.params.id);
+    res.send({
+      success: true,
+      message: "Form deleted successfully",
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
 module.exports = router;

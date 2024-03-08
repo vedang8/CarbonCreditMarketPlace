@@ -11,9 +11,7 @@ const { uploadImageCloudinary } = require("../db/uploadClodinary");
 const userdb = require("../models/user");
 const creditdb = require("../models/credits");
 const { serialize } = require("v8");
-const morgan = require("morgan");
 
-router.use(morgan("combined"));
 // update user credits
 router.put("/update-user-credits/:userId", authenticate, async (req,res) => {
     try{

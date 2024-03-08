@@ -4,7 +4,7 @@ const userdb = require("../models/user");
 const bcrypt = require("bcryptjs");
 const authenticate = require("../middleware/authenticate");
 const morgan = require("morgan");
-
+const analyzeAccessLogs = require("../middleware/analyzeAccessLogs");
 router.use(morgan("combined"));
 
 // for user registration
@@ -25,17 +25,17 @@ router.post("/register", async(req, res) =>{
             const finalUser = new userdb({
                 fname, email, password, cpassword
             });
-
+            
             // 10 credits as reward upon registering
             finalUser.rewardCredits = 10;
-
+            
             const storeData = await finalUser.save();
             //console.log(storeData);
             res.status(201).json({status:201, storeData});
         }
     }catch(error){
         res.status(422).json(error);
-        console.log("catch error");
+        console.log("catch error", error);
     }  
 });
 
@@ -63,10 +63,6 @@ router.post("/login", async (req, res) => {
             return res.status(422).json({ error: "Invalid details" });
         }
         
-        // 2 credits reward for login
-        userValid.rewardCredits += 2;
-        await userValid.save();
-
         const token = await userValid.generateAuthtoken();
 
         res.cookie("usercookie", token, {
@@ -105,10 +101,6 @@ router.get("/logout", authenticate, async(req,res) =>{
 
         res.clearCookie("usercookie",{path:"/"});
         
-        // 1 credit reward
-        req.rootUser.rewardCredits += 1;
-        await req.rootUser.save();
-
         res.status(201).json({status:201})
 
     } catch (error) {

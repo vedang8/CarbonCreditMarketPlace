@@ -2,9 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const Notification = require("../models/notification");
 const authenticate = require("../middleware/authenticate");
-const morgan = require("morgan");
 
-router.use(morgan("combined"));
 // add a notification
 router.post("/notify", authenticate, async (req, res) => {
   try {

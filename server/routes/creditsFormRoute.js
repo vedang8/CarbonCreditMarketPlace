@@ -11,9 +11,7 @@ const { uploadImageCloudinary } = require("../db/uploadClodinary");
 const userdb = require("../models/user");
 const creditdb = require("../models/credits");
 const { serialize } = require("v8");
-const morgan = require("morgan");
 
-router.use(morgan("combined"));
 // create a new credit generation form
 router.post("/credit-forms", authenticate, async (req, res) => {
   const user = req.rootUser; // Assuming you have a valid user object in req.rootUser
@@ -64,7 +62,6 @@ router.put("/edit-credit-forms/:id", authenticate, async (req, res) => {
 
   try {
     const { id } = req.params;
-    const existingForm = await CreditForm.findById(req.params.id);
     if (!ObjectId.isValid(id)) {
       return res
         .status(400)
@@ -75,8 +72,6 @@ router.put("/edit-credit-forms/:id", authenticate, async (req, res) => {
     const updatedForm = await CreditForm.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    user.rewardCredits += 5;
-    await user.save();
     res.send({
       success: true,
       message: "Form Updated Successfully",
@@ -149,7 +144,7 @@ router.get("/get-credit-forms/:id", async (req, res) => {
         message: "Invalid form ID format",
       });
     }
-    
+
     // Find the form by ID
     const form = await CreditForm.findById(formId).populate("user", "fname");
     console.log("form", form);
@@ -159,7 +154,7 @@ router.get("/get-credit-forms/:id", async (req, res) => {
         message: "Form not found",
       });
     }
-    
+
     res.send({
       success: true,
       data: form,
@@ -176,45 +171,51 @@ router.get("/get-credit-forms/:id", async (req, res) => {
 // get image from pc
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-     callback(null, './uploads');
+    callback(null, "./uploads");
   },
   filename: function (req, file, callback) {
     callback(null, `image-${Date.now()}.${file.originalname}`); // use the original filename
   },
 });
 
-
 // handle image upload to cloudinary
-const upload = multer({ storage: storage});
+const upload = multer({ storage: storage });
 
-router.post("/upload-image-to-form", authenticate, upload.single("photo"), async (req, res) => {
-  
-  const upload = await cloudinary.uploader.upload(req.file.path);
-  
-  const creditId = req.body.creditId;
-  
-  try{
-    const credits_form = await CreditForm.findById(creditId)
-    credits_form.images.push({
-       url: req.file.path,
-    });
-    await credits_form.save();
-    
-    res.send({
-      success: true,
-      message: "Image uploaded scuccessfully",
-      data: upload.secure_url,
-    });
-  }catch(error){
-    res.send({
-      success: true,
-      message: error.message
-    });
+router.post(
+  "/upload-image-to-form",
+  authenticate,
+  upload.single("photo"),
+  async (req, res) => {
+    const upload = await cloudinary.uploader.upload(req.file.path);
+
+    const creditId = req.body.creditId;
+
+    try {
+      const credits_form = await CreditForm.findById(creditId);
+      credits_form.images.push({
+        url: req.file.path,
+      });
+      await credits_form.save();
+
+      res.send({
+        success: true,
+        message: "Image uploaded scuccessfully",
+        data: upload.secure_url,
+      });
+    } catch (error) {
+      res.send({
+        success: true,
+        message: error.message,
+      });
+    }
   }
-});
+);
 
 // update form status
-router.put("/update-credits-forms-status/:id", authenticate, async (req, res) => {
+router.put(
+  "/update-credits-forms-status/:id",
+  authenticate,
+  async (req, res) => {
     try {
       const { status } = req.body;
       await CreditForm.findByIdAndUpdate(req.params.id, { status });
@@ -232,64 +233,82 @@ router.put("/update-credits-forms-status/:id", authenticate, async (req, res) =>
 );
 
 // generate certificate
-router.post("/generate-certificate/:id",authenticate, async (req, res) => {
-    try {
-      const creditForm = await CreditForm.findById(req.params.id);
-      // Generate certificate PDF
-      const pdfDoc = new PDFDocument();
-      const filePath = `./certificates/${creditForm._id}.pdf`; // Path to save the PDF
-      const writeStream = fs.createWriteStream(filePath); // Create write stream
-  
-      // Pipe generated PDF to write stream
-      pdfDoc.pipe(writeStream);
-  
-      // Set background color
-      pdfDoc.rect(0, 0, 612, 792).fill('#f0f0f0');
+router.post("/generate-certificate/:id", authenticate, async (req, res) => {
+  try {
+    const creditForm = await CreditForm.findById(req.params.id);
+    // Generate certificate PDF
+    const pdfDoc = new PDFDocument();
+    const filePath = `./certificates/${creditForm._id}.pdf`; // Path to save the PDF
+    const writeStream = fs.createWriteStream(filePath); // Create write stream
 
-      // Set font and font size
-      pdfDoc.font('Helvetica-Bold');
-      pdfDoc.fontSize(24);
+    // Pipe generated PDF to write stream
+    pdfDoc.pipe(writeStream);
 
-      // Adding content to the PDF
-      pdfDoc.text('Carbon Credit Certificate', { align: 'center' });
-      
-      // Add separator line
-      pdfDoc.moveDown().strokeColor('#000').lineWidth(1).moveTo(50, pdfDoc.y).lineTo(550, pdfDoc.y).stroke();
-      
-      // Reset font and font size
-      pdfDoc.font('Helvetica');
-      pdfDoc.fontSize(14);
+    // Set background color
+    pdfDoc.rect(0, 0, 612, 792).fill("#f0f0f0");
 
-      pdfDoc.moveDown().text(`Project Name: ${creditForm.projectName}`);
-      pdfDoc.text(`Project Type: ${creditForm.projectType}`);
-      pdfDoc.text(`Description: ${creditForm.description}`);
-      pdfDoc.text(`Start Date: ${creditForm.startDate}`);
-      pdfDoc.text(`End Date: ${creditForm.endDate}`);
-      
-      pdfDoc.moveDown().text(`Baseline Emission Amount: ${creditForm.baselineEmissionAmount} tons CO2`);
-      pdfDoc.text(`Project Emission Amount: ${creditForm.projectEmissionAmount} tons CO2`);
-      pdfDoc.text(`Reduction Achieved: ${creditForm.baselineEmissionAmount - creditForm.projectEmissionAmount} tons CO2`);
-      pdfDoc.text(`Number of Trees Planted: ${creditForm.numOfTrees}`);
-      pdfDoc.text(`Number of Solar Panels Installed: ${creditForm.numOfSolarPanels}`);
-      pdfDoc.text(`Electricity Generated: ${creditForm.electricity} kWh`);
-  
-      // Finalize PDF
-      pdfDoc.end();
-  
-      // Once the PDF is written, respond with success message
-      writeStream.on('finish', () => {
-        res.send({ 
-            success: true,
-            message: "Certificate generated successfully",
-         });
-      });
-    } catch (error) {
-      console.error(error);
+    // Set font and font size
+    pdfDoc.font("Helvetica-Bold");
+    pdfDoc.fontSize(24);
+
+    // Adding content to the PDF
+    pdfDoc.text("Carbon Credit Certificate", { align: "center" });
+
+    // Add separator line
+    pdfDoc
+      .moveDown()
+      .strokeColor("#000")
+      .lineWidth(1)
+      .moveTo(50, pdfDoc.y)
+      .lineTo(550, pdfDoc.y)
+      .stroke();
+
+    // Reset font and font size
+    pdfDoc.font("Helvetica");
+    pdfDoc.fontSize(14);
+
+    pdfDoc.moveDown().text(`Project Name: ${creditForm.projectName}`);
+    pdfDoc.text(`Project Type: ${creditForm.projectType}`);
+    pdfDoc.text(`Description: ${creditForm.description}`);
+    pdfDoc.text(`Start Date: ${creditForm.startDate}`);
+    pdfDoc.text(`End Date: ${creditForm.endDate}`);
+
+    pdfDoc
+      .moveDown()
+      .text(
+        `Baseline Emission Amount: ${creditForm.baselineEmissionAmount} tons CO2`
+      );
+    pdfDoc.text(
+      `Project Emission Amount: ${creditForm.projectEmissionAmount} tons CO2`
+    );
+    pdfDoc.text(
+      `Reduction Achieved: ${
+        creditForm.baselineEmissionAmount - creditForm.projectEmissionAmount
+      } tons CO2`
+    );
+    pdfDoc.text(`Number of Trees Planted: ${creditForm.numOfTrees}`);
+    pdfDoc.text(
+      `Number of Solar Panels Installed: ${creditForm.numOfSolarPanels}`
+    );
+    pdfDoc.text(`Electricity Generated: ${creditForm.electricity} kWh`);
+
+    // Finalize PDF
+    pdfDoc.end();
+
+    // Once the PDF is written, respond with success message
+    writeStream.on("finish", () => {
       res.send({
-        success: false,
-        message: "Internal Server error",
+        success: true,
+        message: "Certificate generated successfully",
       });
-    }
-  });
-  
+    });
+  } catch (error) {
+    console.error(error);
+    res.send({
+      success: false,
+      message: "Internal Server error",
+    });
+  }
+});
+
 module.exports = router;
