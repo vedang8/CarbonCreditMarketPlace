@@ -166,4 +166,33 @@ router.delete("/delete-sell-credit-forms/:id", authenticate, async (req, res) =>
   }
 });
 
+router.post("/buy-and-sell", authenticate, async (req, res) => {
+  const user = req.rootUser;
+  const {selectedSellCredit, id} = req.body;
+  try{
+    console.log("ffffff", selectedSellCredit);
+    const sellc = selectedSellCredit.sellCredits;
+
+    const buyer = await userdb.findById(id);
+    buyer.credits += sellc;
+    await buyer.save();
+
+    user.credits -= sellc;
+    await user.save();
+
+    const selling_status = "Sold";
+    const form_id = selectedSellCredit._id;
+    await sell_creditforms.findByIdAndUpdate(form_id, {selling_status});
+
+    res.send({
+      success: true,
+    });
+  }catch(error){
+    res.send({
+      success: false,
+      message: error.message,
+    })
+  }
+});
+
 module.exports = router;

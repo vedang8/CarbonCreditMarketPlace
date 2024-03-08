@@ -9,7 +9,7 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
   const [bidsData, setBidsData] = useState([]);
   const dispatch = useDispatch();
   const [clickedBidId, setClickedBidId] = useState(null);
-
+  console.log("Selected ", selectedSellCredit);
   const getData = async () => {
     try {
       const token = localStorage.getItem("usersdatatoken");
@@ -41,6 +41,7 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
     dispatch(SetLoader(true));
     setClickedBidId(id);
     try {
+      // notify buyer for winning bid  
       const notifyUser = {
         title: "Congratulations! 🎉",
         message: `You have Won the Bid`,
@@ -57,13 +58,43 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
         },
         body: JSON.stringify(notifyUser),
       });
+      message.success("Buyer has been notified");
+
+      // buy and sell
+      const res = await fetch("/buy-and-sell", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ selectedSellCredit, id }),
+      });
       dispatch(SetLoader(false));
-      if (notifyResponse.ok) {
-        message.success("Buyer has beeen notified");
+      if(res.ok){
+        message.success("Carbon Credits have been sold");
       }
+      
+      // notify buyer for the credits
+      const notify1 = {
+        title: "Congratulations! 🎉",
+        message: `You have earned ${selectedSellCredit.sellCredits} Carbon Credits from ${selectedSellCredit.user.fname}`,
+        user: id,
+        onClick: `/profile`,
+        read: false,
+      };
+
+      const notifyResponse1 = await fetch("/notify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(notify1),
+      });
+     
     } catch (error) {
-        dispatch(SetLoader(false));
-        console.log(error);
+      dispatch(SetLoader(false));
+      console.log(error);
     }
   };
 
@@ -103,9 +134,10 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
     {
       title: "Actions",
       render: (record) => (
-        <Button onClick={() => assignBidder(record?.buyer?._id)}
-         disabled={clickedBidId === record?.buyer?._id}
-         style = {{backgroundColor: "green"}}
+        <Button
+          onClick={() => assignBidder(record?.buyer?._id)}
+          disabled={clickedBidId === record?.buyer?._id}
+          style={{ backgroundColor: "green" }}
         >
           {clickedBidId === record?.buyer?._id ? "Assigned" : "Assign"}
         </Button>
