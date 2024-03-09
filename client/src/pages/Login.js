@@ -5,6 +5,7 @@ import "./mix.css";
 import { useDispatch } from "react-redux";
 import { SetLoader } from "../redux/loadersSlice";
 import { message } from "antd";
+import imageSrc from '../images/carbontrading.jpg';
 
 const Login = () => {
   const [passShow, setPassShow] = useState(false);
@@ -70,6 +71,11 @@ const Login = () => {
 
   return (
     <>
+    <div className="login-container">
+      <div className="left-half">
+        <img src={imageSrc} alt="Image" />
+      </div>
+      <div className="right-half">
       <section>
         <div className="form_data">
           <div className="form_heading">
@@ -115,6 +121,8 @@ const Login = () => {
           </form>
         </div>
       </section>
+      </div>
+    </div>
     </>
   );
 };

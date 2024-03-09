@@ -3,7 +3,29 @@ section{
     padding: 10px;
     min-height:calc(100vh - 80px);
 }
-
+.login-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .left-half {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .right-half {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .left-half img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire space */
+  }
 section .form_data{
     max-width: 550px;
     margin: 25px auto;

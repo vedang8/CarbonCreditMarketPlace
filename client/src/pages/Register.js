@@ -5,7 +5,7 @@ import { SetLoader } from "../redux/loadersSlice";
 import { message } from "antd";
 // import {ToastContainer, toast} from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
-
+import imageSrc from '../images/carbontrading.jpg';
 import "./mix.css";
 
 const Register = () => {
@@ -88,6 +88,11 @@ const Register = () => {
 
   return (
     <>
+    <div className="login-container">
+      <div className="left-half">
+        <img src={imageSrc} alt="Image" />
+      </div>
+      <div className="right-half">
       <section>
         <div className="form_data">
           <div className="form_heading">
@@ -163,6 +168,9 @@ const Register = () => {
           </form>
         </div>
       </section>
+      </div>
+    </div>
+      
     </>
   );
 };
