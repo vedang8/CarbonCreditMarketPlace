@@ -76,10 +76,20 @@ function Credits() {
     {
       title: "Start Date",
       dataIndex: "startDate",
+      render: (record) => {
+        return (
+          <span>{new Date(record).toLocaleDateString()}</span>
+        );
+      }
     },
     {
       title: "End Date",
       dataIndex: "endDate",
+      render: (record) => {
+        return (
+          <span>{new Date(record).toLocaleDateString()}</span>
+        );
+      }
     },
     {
       title: "Baseline Emission Amt",

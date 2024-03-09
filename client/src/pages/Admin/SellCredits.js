@@ -45,7 +45,7 @@ function SellCredits() {
           const { status, _id } = record;
           return (
             <div className="flex gap-5">
-              {status === "Pending" && (
+              {status === "pending" && (
                 <span
                   className="underline cursor-pointer"
                   onClick={() => onStatusUpdate(_id, "Approved")}
@@ -53,7 +53,7 @@ function SellCredits() {
                   Approve
                 </span>
               )}
-              {status === "Pending" && (
+              {status === "pending" && (
                 <span
                   className="underline cursor-pointer"
                   onClick={() => onStatusUpdate(_id, "Rejected")}

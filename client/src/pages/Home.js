@@ -12,7 +12,7 @@ const Home = () => {
     const [credits, setCredits] = useState([]); 
     const [forms, setForms] = useState([]);
     const [filters, setFilters] = useState({
-      status: "approved",
+      status: "Approved",
     });
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -57,7 +57,7 @@ const Home = () => {
         <div>
           <div className="grid grid-cols-5 gap-2">
             {forms
-              .filter((form) => form.status === "approved")
+              .filter((form) => form.status === "Approved")
               .map((form) => {
                 return (
                   <div className="border border-gray-300 rounded border-solid flex flex-col gap-5 pb-2 cursor-pointer"
