@@ -81,7 +81,7 @@ function Carbon_Credits() {
   const updateCredits = async () => {
     try {
       const expiredCredits = credits.filter(
-        (credit) => credit.status === "Expired"
+        (credit) => credit.status === "expired"
       );
 
       if (expiredCredits.length > 0) {
@@ -154,30 +154,14 @@ function Carbon_Credits() {
       dataIndex: "status",
       key: "status",
       render: (text, record) => (
-        <span
-          style={{
-            fontSize: "16px",
-            backgroundColor:
-              record.status === "Expired" ? "#FF7F50" : "greenyellow",
-            color: record.status === "Expired" ? "#FF7F50" : "123524",
-          }}
-        >
-          {text}
-        </span>
+        record.status
       ),
     },
     {
       title: "Remaining Time",
       dataIndex: "expiryDate",
       key: "expiryDate",
-      render: (expiryDate, record) => {
-        const { status, remainingTime } = calculateTimeLeft(expiryDate);
-        return status === "Active" ? (
-          <CountdownTimer targetDate={remainingTime} />
-        ) : (
-          <span>{record.status}</span>
-        );
-      },
+      render: (expiryDate, record) => <CountdownTimer targetDate={expiryDate} status={record.status} />
     },
   ];
 

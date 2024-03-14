@@ -10,42 +10,48 @@ import Admin from "./Admin/index";
 import { Badge, Avatar, message } from "antd";
 import SellCreditsInfo from "./SellCreditsInfo/index.js";
 import Notifications from "../components/Notifications.js";
+import backgroundImage from "../images/wallpaper.gif";
 
 const Dashboard = () => {
   const { logindata, setLoginData } = useContext(LoginContext);
-  //  const { user } = useSelector((state)=> state.users);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
-  const [notifications = [], setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
 
   const DashboardValid = async () => {
     dispatch(SetLoader(true));
     let token = localStorage.getItem("usersdatatoken");
 
-    const res = await fetch("/validuser", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
-    const data = await res.json();
-    console.log("user data", data.ValidUserOne);
-    dispatch(SetLoader(false));
-    if (data.status === 401 || !data) {
+    try {
+      const res = await fetch("/validuser", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setLoginData(data);
+        dispatch(SetUser(data)); 
+        navigate("/home");
+        getNotifications();
+      } else {
+        throw new Error(data.message || 'Failed to authenticate');
+      }
+    } catch (error) {
+      dispatch(SetLoader(false));
+      message.error(error.message || 'Failed to authenticate');
       navigate("/login");
-    } else {
-      setLoginData(data);
-      dispatch(SetUser(data)); // Dispatch the sey User action
-      navigate("/home");
-      getNotifications();
     }
   };
 
   const getNotifications = async () => {
     let token = localStorage.getItem("usersdatatoken");
+
     try {
       const resnotify = await fetch("/get-all-notifications", {
         method: "GET",
@@ -54,19 +60,21 @@ const Dashboard = () => {
           Authorization: token,
         },
       });
+
       if (resnotify.ok) {
         const responseData = await resnotify.json();
         setNotifications(responseData.data);
       } else {
-        throw new Error(resnotify.message);
+        throw new Error(resnotify.message || 'Failed to fetch notifications');
       }
     } catch (error) {
-      message.error(error.message);
+      message.error(error.message || 'Failed to fetch notifications');
     }
   };
 
   const readNotifications = async () => {
     let token = localStorage.getItem("usersdatatoken");
+
     try {
       const response = await fetch("/read-all-notifications", {
         method: "PUT",
@@ -75,41 +83,46 @@ const Dashboard = () => {
           Authorization: token,
         },
       });
+
       if (response.ok) {
         getNotifications();
       } else {
-        throw new Error(response.message);
+        throw new Error(response.message || 'Failed to mark notifications as read');
       }
     } catch (error) {
-      message.error(error.message);
+      message.error(error.message || 'Failed to mark notifications as read');
     }
   };
 
   const logoutuser = async () => {
     dispatch(SetLoader(true));
     let token = localStorage.getItem("usersdatatoken");
-    const res = await fetch("/logout", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-        Accept: "application/json",
-      },
-      credentials: "include",
-    });
 
-    const data = await res.json();
-    dispatch(SetLoader(false));
-    if (data.status !== 201) {
+    try {
+      const res = await fetch("/logout", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+          Accept: "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.removeItem("usersdatatoken");
+        setLoginData(false);
+        message.success("Logged out Successfully");
+        navigate("/login");
+      } else {
+        throw new Error(data.message || 'Failed to log out');
+      }
+    } catch (error) {
       dispatch(SetLoader(false));
-      console.log("error");
+      message.error(error.message || 'Failed to log out');
       navigate("*");
-    } else {
-      console.log("user loggout ");
-      localStorage.removeItem("usersdatatoken");
-      setLoginData(false);
-      message.success("Logged out Successfully");
-      navigate("/login");
     }
   };
 
@@ -118,16 +131,22 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      <div className="flex justify-between items-center bg-primary p-5">
+    <div
+    style={{
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      minHeight: "100vh",
+    }}
+    >
+      <div className="bg-black bg-opacity-50 p-5 flex justify-between items-center">
         <h1
           className="text-2xl text-white cursor-pointer"
           onClick={() => navigate("/home")}
         >
           CARBON CREDIT MARKET PLACE
         </h1>
-        <div className="bg-white py-2 px-5 rounded flex gap-1 items-center">
-          {/* <i className="ri-shield-user-line"></i> */}
+        <div className="bg-white bg-opacity-50 py-2 px-5 rounded flex items-center gap-1">
           <span
             className="underline cursor-pointer"
             onClick={() => {
@@ -141,9 +160,7 @@ const Dashboard = () => {
             {logindata ? logindata.ValidUserOne.fname.toUpperCase() : ""}
           </span>
           <Badge
-            count={
-              notifications?.filter((notification) => !notification.read).length
-            }
+            count={notifications?.filter((notification) => !notification.read).length}
             onClick={() => {
               setShowNotifications(true);
               readNotifications(true);
@@ -157,10 +174,8 @@ const Dashboard = () => {
             />
           </Badge>
           <i
-            className="ri-logout-box-r-line ml-10 cursor-pointer"
-            onClick={() => {
-              logoutuser();
-            }}
+            className="ri-logout-box-r-line ml-2 cursor-pointer"
+            onClick={() => logoutuser()}
           ></i>
         </div>
         {
@@ -173,15 +188,14 @@ const Dashboard = () => {
         }
       </div>
       <Routes>
-        <Route>
-          <Route path="/home" element={<Home />} />
-          <Route path="/sell-credit/:id" element={<SellCreditsInfo />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
-        </Route>
+        <Route path="/home" element={<Home />} />
+        <Route path="/sell-credit/:id" element={<SellCreditsInfo />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </div>
   );
+
 };
 
 export default Dashboard;
