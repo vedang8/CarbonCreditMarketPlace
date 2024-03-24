@@ -69,7 +69,8 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
       });
       dispatch(SetLoader(false));
       if(res.ok){
-        message.success("Carbon Credits have been sold");
+        const data = await res.json();
+        message.success(data.message);
       }
       
       // notify buyer for the credits

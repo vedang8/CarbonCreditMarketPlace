@@ -186,6 +186,7 @@ router.post("/buy-and-sell", authenticate, async (req, res) => {
 
     res.send({
       success: true,
+      message: "Carbon Credits have been sold!!"
     });
   }catch(error){
     res.send({

@@ -51,35 +51,37 @@ const Home = () => {
   }, [])
 
   return (
-    <div className="container mx-auto px-2 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {forms
-          .filter((form) => form.status === "Approved")
-          .map((form) => (
-            <div 
-              key={form._id} 
-              className="border border-gray-300 rounded-lg overflow-hidden shadow-md transition duration-300 ease-in-out transform hover:scale-105"
-              onClick={() => navigate(`/sell-credit/${form._id}`)}
-            >
-              <div className="relative overflow-hidden">
-                {form.images && form.images.length > 0 ? (
-                  <img src={form.images[0]} className="w-full h-48 object-cover" alt="Credit form" />
-                ) : (
-                  <div className="w-full h-48 flex items-center justify-center bg-gray-200">No image available</div>
-                )}
-                <div className="absolute bottom-0 left-0 bg-white px-4 py-2">
-                  <CountdownTimer targetDate={form.sellBeforeDate} />
+    <div className="bg-cover bg-center min-h-screen" style={{ backgroundImage: `url(${imageSrc})` }}>
+      <div className="container mx-auto px-2 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {forms
+            .filter((form) => form.status === "Approved")
+            .map((form) => (
+              <div 
+                key={form._id} 
+                className="border border-gray-300 rounded-lg overflow-hidden shadow-md transition duration-300 ease-in-out transform hover:scale-105 bg-white"
+                onClick={() => navigate(`/sell-credit/${form._id}`)}
+              >
+                <div className="relative overflow-hidden">
+                  {form.images && form.images.length > 0 ? (
+                    <img src={form.images[0]} className="w-full h-48 object-cover" alt="Credit form" />
+                  ) : (
+                    <div className="w-full h-48 flex items-center justify-center bg-gray-200">No image available</div>
+                  )}
+                  <div className="absolute bottom-0 left-0 bg-white px-4 py-2">
+                    <CountdownTimer targetDate={form.sellBeforeDate} />
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h2 className="text-xl font-semibold mb-2">{form.user.fname}</h2>
+                  <div className="flex items-center text-green-700">
+                    <i className="ri-hand-coin-fill mr-2"></i>
+                    <span className="text-xl font-semibold">{form.sellCredits}</span>
+                  </div>
                 </div>
               </div>
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{form.user.fname}</h2>
-                <div className="flex items-center text-green-700">
-                  <i className="ri-hand-coin-fill mr-2"></i>
-                  <span className="text-xl font-semibold">{form.sellCredits}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+        </div>
       </div>
     </div>
   );

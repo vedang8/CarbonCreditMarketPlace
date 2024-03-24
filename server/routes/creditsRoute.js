@@ -100,6 +100,7 @@ router.put("/update-credits-status", authenticate, async(req, res) => {
      res.send({
       success: true,
       message: "User credits updated Successfully",
+      credits
     });
    }catch(error){
     res.send({

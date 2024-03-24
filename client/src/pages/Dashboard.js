@@ -33,7 +33,7 @@ const Dashboard = () => {
         },
       });
       const data = await res.json();
-
+      dispatch(SetLoader(false));
       if (res.ok) {
         setLoginData(data);
         dispatch(SetUser(data)); 
@@ -110,7 +110,7 @@ const Dashboard = () => {
       });
 
       const data = await res.json();
-
+      dispatch(SetLoader(false));
       if (res.ok) {
         localStorage.removeItem("usersdatatoken");
         setLoginData(false);

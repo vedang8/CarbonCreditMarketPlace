@@ -29,17 +29,43 @@ function Carbon_Credits() {
       if (!creditsResponse.ok) {
         throw new Error("Failed to fetch credits");
       }
-
+  
       const creditsData = await creditsResponse.json();
+      console.log("Credits :: ", creditsData);
       const updatedCredits = creditsData.credits.map((credit) => {
         const { expiryDate, _id } = credit;
-        const { status, remainingTime } = calculateTimeLeft(expiryDate);
-        return { ...credit, status, remainingTime, _id };
+        const { remainingTime } = calculateTimeLeft(expiryDate);
+        return { ...credit, remainingTime, _id };
       });
-
+      console.log("UPDATED CREDITS:: ", updatedCredits);
+      
       setCredits(updatedCredits);
+
+      const act = updatedCredits.filter(
+        (credit) => credit.status === "active" && credit.remainingTime == null
+      );
+      console.log("acttt", act);
+      // changing the status 
+      if (act.length > 0) {
+        const response_act = await fetch("/update-credits-status", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({
+            credit_id: act.map((credit) => credit._id),
+          }),
+        });
+
+        creditsData = await response_act.json();
+        setCredits(creditsData.credits);
+      }
+      
+      // setting the credits 
+
       const activeApprovedCredits = updatedCredits.filter(
-        (credit) => credit.status === "Active"
+        (credit) => credit.status === "active" 
       );
       setTotalCredits(
         activeApprovedCredits.reduce(
@@ -72,58 +98,58 @@ function Carbon_Credits() {
 
   useEffect(() => {
     fetchCredits();
-    updateCredits();
+    //updateCredits();
     const interval = setInterval(fetchCredits, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const updateCredits = async () => {
-    try {
-      const expiredCredits = credits.filter(
-        (credit) => credit.status === "expired"
-      );
+  // const updateCredits = async () => {
+  //   try {
+  //     const expiredCredits = credits.filter(
+  //       (credit) => credit.status === "expired"
+  //     );
+  //     console.log("Expired Credits", expiredCredits);
+  //     if (expiredCredits.length > 0) {
+  //       const token = localStorage.getItem("usersdatatoken");
+  //       const response = await fetch("/update-credits-status", {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: token,
+  //         },
+  //         body: JSON.stringify({
+  //           credit_id: expiredCredits.map((credit) => credit._id),
+  //         }),
+  //       });
 
-      if (expiredCredits.length > 0) {
-        const token = localStorage.getItem("usersdatatoken");
-        const response = await fetch("/update-credits-status", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify({
-            credit_id: expiredCredits.map((credit) => credit._id),
-          }),
-        });
+  //       if (response.ok) {
+  //         console.log("Credits status updated");
+  //       } else {
+  //         throw new Error("Failed to update credits status in the database");
+  //       }
+  //     }
 
-        if (response.ok) {
-          console.log("Credits status updated");
-        } else {
-          throw new Error("Failed to update credits status in the database");
-        }
-      }
-
-      setCredits((prevCredits) =>
-        prevCredits.map((credit) => {
-          const { expiryDate } = credit;
-          const { status, remainingTime } = calculateTimeLeft(expiryDate);
-          return { ...credit, status, remainingTime };
-        })
-      );
-    } catch (error) {
-      console.error("Error updating credits status:", error.message);
-    }
-  };
+  //     setCredits((prevCredits) =>
+  //       prevCredits.map((credit) => {
+  //         const { expiryDate } = credit;
+  //         const { status, remainingTime } = calculateTimeLeft(expiryDate);
+  //         return { ...credit, status, remainingTime };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating credits status:", error.message);
+  //   }
+  // };
 
   const calculateTimeLeft = (expiryDate) => {
     const expirationDate = new Date(expiryDate);
     const currentTime = new Date();
 
     if (expirationDate < currentTime) {
-      return { status: "Expired", remainingTime: null };
+      return { remainingTime: null };
     } else {
-      return { status: "Active", remainingTime: expirationDate };
+      return { remainingTime: expirationDate };
     }
   };
 
