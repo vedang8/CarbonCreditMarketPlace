@@ -25,7 +25,13 @@ function CustomTabPanel({ children, value, index }) {
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#151E3D", // Adjust this color as needed
+    },
+  },
+});
 
 export default function Profile() {
   const [value, setValue] = useState(0);
@@ -64,8 +70,9 @@ export default function Profile() {
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
-          TabIndicatorProps={{ style: { backgroundColor: "green" } }}
+          TabIndicatorProps={{ style: { backgroundColor: "#151E3D" } }}
           className="bg-white bg-opacity-50 p-4 rounded-md mt-4"
+          textColor="primary" // Set text color of tabs
         >
           <Tab label="My Forms" />
           <Tab label="Credits" />
