@@ -18,6 +18,8 @@ const Register = () => {
     email: "",
     password: "",
     cpassword: "",
+    profileImage: null, // Add state to store the profile image file
+    imageUrl: "", // Add state to store the Cloudinary image URL
   });
 
   const setVal = (e) => {
@@ -31,58 +33,115 @@ const Register = () => {
     });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setInpval((prevState) => ({
+      ...prevState,
+      profileImage: file,
+    }));
+  };
+
+  const uploadImageToCloudinary = async (e) => {
+    e.preventDefault();
+    
+    const { profileImage } = inpval;
+    if (!profileImage) {
+      message.error("Please select an image to upload");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", profileImage);
+    formData.append("upload_preset", "ksd1a115"); // Replace "your_upload_preset" with your Cloudinary upload preset
+
+    try {
+      const response = await fetch("https://api.cloudinary.com/v1_1/drtgq0any/image/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.secure_url) {
+        setInpval((prevState) => ({
+          ...prevState,
+          imageUrl: data.secure_url,
+        }));
+        message.success("Image uploaded successfully!");
+      } else {
+        message.error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      message.error("An error occurred while uploading the image");
+    }
+  };
+
   const addUserdata = async (e) => {
     e.preventDefault();
 
-    const { fname, email, password, cpassword } = inpval;
+    const { fname, email, password, cpassword, imageUrl } = inpval;
 
-    if (fname === "") {
-      message.error("Username is required");
-    } else if (email === "") {
-      message.error("Email is required");
-    } else if (!email.includes("@gmail.com")) {
-      message.error("Please enter valid email");
-    } else if (password === "") {
-      message.error("Enter your Password");
-    } else if (password.length < 6) {
-      message.error("Password must be 6 char");
-    } else if (cpassword === "") {
-      message.error("Enter your confirm password");
-    } else if (cpassword.length < 6) {
-      message.error("Confirm Password must be 6 char");
-    } else if (password !== cpassword) {
-      message.error("Password and Confirm Password must be same");
-    } else {
-      dispatch(SetLoader(true));
-      // console.log("user registration done");
-      const data = await fetch("/register", {
+    if (fname === "" || email === "" || password === "" || cpassword === "" || !imageUrl) {
+      message.error("Please fill in all fields and upload a profile picture");
+      return;
+    }
+
+    if (!email.includes("@gmail.com")) {
+      message.error("Please enter a valid email address");
+      return;
+    }
+
+    if (password.length < 6 || cpassword.length < 6) {
+      message.error("Password must be at least 6 characters long");
+      return;
+    }
+
+    if (password !== cpassword) {
+      message.error("Password and Confirm Password must match");
+      return;
+    }
+
+    dispatch(SetLoader(true));
+
+    const formData = {
+      fname,
+      email,
+      password,
+      cpassword,
+      profilePicture: imageUrl, // Pass the Cloudinary image URL to the backend
+    };
+
+    try {
+      const response = await fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          fname,
-          email,
-          password,
-          cpassword,
-        }),
+        body: JSON.stringify(formData),
       });
-      const res = await data.json();
+
+      const data = await response.json();
+
       dispatch(SetLoader(false));
-      //console.log(res);
-      if (res.status === 201) {
-        message.success("Congratulations!!! 🎉 You are registered");
-        message.success("Please Login with your credentials");
-        message.success("🪙 10 points are rewarded! 🎊");
+
+      if (data.status === 201) {
+        message.success("Congratulations! You are registered");
+        message.success("Please login with your credentials");
+        message.success("10 points are rewarded!");
         setInpval({
-          ...inpval,
           fname: "",
           email: "",
           password: "",
           cpassword: "",
+          profileImage: null,
+          imageUrl: "",
         });
         navigate("/login");
+      } else {
+        message.error(data.message || "An error occurred");
       }
+    } catch (error) {
+      dispatch(SetLoader(false));
+      message.error("An error occurred. Please try again later.");
     }
   };
 
@@ -159,6 +218,17 @@ const Register = () => {
                 </div>
               </div>
             </div>
+            <div className="form_input">
+                <label htmlFor="profileImage">Profile Picture</label>
+                <input
+                  type="file"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  name="profileImage"
+                  id="profileImage"
+                />
+                <button className="btn" onClick={uploadImageToCloudinary}>Upload Image</button>
+              </div>
             <button className="btn" onClick={addUserdata}>
               Sign Up
             </button>
