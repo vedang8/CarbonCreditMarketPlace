@@ -13,7 +13,7 @@ const creditdb = require("../models/credits");
 const { serialize } = require("v8");
 const PDFDocument = require('pdfkit');
 const nodemailer = require('nodemailer');
-
+const Notification = require("../models/notification");
 // create a new credit generation form
 router.post("/credit-forms", authenticate, async (req, res) => {
   const user = req.rootUser; // Assuming you have a valid user object in req.rootUser
@@ -27,6 +27,19 @@ router.post("/credit-forms", authenticate, async (req, res) => {
   try {
     const newForm = new CreditForm(formDataWithUser);
     await newForm.save();
+
+    // send notification to admin
+    const admins = await userdb.find({ role: "admin" });
+    admins.forEach(async (admin) => {
+      const newNotification = new Notification({
+        user: admin._id,
+        message: `New Form added by ${user.fname}`,
+        title: "Carbon Credits Generation Form",
+        onClick: `/admin`,
+        read: false,
+      });
+      await newNotification.save();
+    });
     res.send({
       success: true,
       message: "Form Submitted Successfully",
@@ -216,6 +229,9 @@ router.put(
     try {
       const { status } = req.body;
       await CreditForm.findByIdAndUpdate(req.params.id, { status });
+      
+      // send notification to user
+      
       res.send({
         success: true,
         message: "Form status updated Successfully",
