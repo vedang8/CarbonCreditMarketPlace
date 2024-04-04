@@ -6,10 +6,11 @@ import moment from "moment";
 import Divider from "../../components/Divider";
 
 function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
-  const [bidsData, setBidsData] = useState([]);
+  const [bidsData, setBidsData] = useState([]); 
   const dispatch = useDispatch();
   const [clickedBidId, setClickedBidId] = useState(null);
   console.log("Selected ", selectedSellCredit);
+
   const getData = async () => {
     try {
       const token = localStorage.getItem("usersdatatoken");
@@ -56,8 +57,10 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
         },
         body: JSON.stringify(notifyUser),
       });
-      message.success("Buyer has been notified");
-
+      if(notifyResponse.ok){
+        message.success("Buyer has been notified");
+      }
+      
       // buy and sell
       const res = await fetch("/buy-and-sell", {
         method: "POST",

@@ -6,7 +6,6 @@ import { SetLoader } from "../../redux/loadersSlice";
 
 function Credits() {
   const [creditsForm, setCreditsForm] = useState([]);
-
   const dispatch = useDispatch();
 
   const columns = [
@@ -21,10 +20,6 @@ function Credits() {
       title: "Project Name",
       dataIndex: "projectName",
     },
-    // {
-    //   title: "Project Type",
-    //   dataIndex: "projectType",
-    // },
     {
       title: "Start Date",
       dataIndex: "startDate",
@@ -145,6 +140,7 @@ function Credits() {
         },
         body: JSON.stringify({ status }),
       });
+      dispatch(SetLoader(false));
       if (response.ok) {
         const data = await response.json();
         message.success(data.message);
@@ -163,7 +159,6 @@ function Credits() {
             message.success(data1.message);
           }
         }
-        dispatch(SetLoader(false));
       } else {
         throw new Error("Error updating form status");
       }

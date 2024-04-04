@@ -40,6 +40,7 @@ router.get("/get-all-sell-credit-forms", authenticate, async (req, res) => {
     const forms = await sell_creditforms
       .find()
       .populate("user", "fname")
+      .populate("user", "profilePicture")
       .sort({ createdAt: -1 });
     res.send({
       success: true,

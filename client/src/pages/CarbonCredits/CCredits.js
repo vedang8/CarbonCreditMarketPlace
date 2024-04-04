@@ -88,6 +88,7 @@ function Carbon_Credits() {
 
       const rewardCreditsData = await rewardCreditsResponse.json();
       setRewardCredits(rewardCreditsData.reward_credits);
+      setTotalCredits(rewardCreditsData.carbon_credits);
       dispatch(SetLoader(false));
       setLoading(false);
     } catch (error) {
@@ -103,44 +104,6 @@ function Carbon_Credits() {
 
     return () => clearInterval(interval);
   }, []);
-
-  // const updateCredits = async () => {
-  //   try {
-  //     const expiredCredits = credits.filter(
-  //       (credit) => credit.status === "expired"
-  //     );
-  //     console.log("Expired Credits", expiredCredits);
-  //     if (expiredCredits.length > 0) {
-  //       const token = localStorage.getItem("usersdatatoken");
-  //       const response = await fetch("/update-credits-status", {
-  //         method: "PUT",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: token,
-  //         },
-  //         body: JSON.stringify({
-  //           credit_id: expiredCredits.map((credit) => credit._id),
-  //         }),
-  //       });
-
-  //       if (response.ok) {
-  //         console.log("Credits status updated");
-  //       } else {
-  //         throw new Error("Failed to update credits status in the database");
-  //       }
-  //     }
-
-  //     setCredits((prevCredits) =>
-  //       prevCredits.map((credit) => {
-  //         const { expiryDate } = credit;
-  //         const { status, remainingTime } = calculateTimeLeft(expiryDate);
-  //         return { ...credit, status, remainingTime };
-  //       })
-  //     );
-  //   } catch (error) {
-  //     console.error("Error updating credits status:", error.message);
-  //   }
-  // };
 
   const calculateTimeLeft = (expiryDate) => {
     const expirationDate = new Date(expiryDate);
@@ -192,9 +155,11 @@ function Carbon_Credits() {
   ];
 
   return (
-    <div className="icons">
-      <h1>Total Credits Earned: {totalCredits}</h1>
-      <h1>Reward Credits Earned: {rewardCredits}</h1>
+    <div className="data">
+      <div>
+        <h1 style={{ color: 'white' }}>Total Credits Earned: {totalCredits}</h1>
+        <h1 style={{ color: 'white' }}>Reward Credits Earned: {rewardCredits}</h1>
+      </div>
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -202,6 +167,8 @@ function Carbon_Credits() {
       )}
     </div>
   );
+  
+  
 }
 
 export default Carbon_Credits;

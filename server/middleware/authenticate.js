@@ -5,7 +5,9 @@ const keysecret = "vedangjoshishaileshjoshipravinku";
 const authenticate = async(req, res, next) => {
  
     try {
-        const token = req.headers.authorization;
+        const token = req.cookies.token 
+        || req.body.token 
+        || req.header("Authorization").replace("Bearer ", "");;
         console.log(token);
         const verifytoken = jwt.verify(token,keysecret);
         

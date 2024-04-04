@@ -3,7 +3,7 @@ import { Tabs, Tab, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { SetLoader } from "../../redux/loadersSlice";
 import { message } from "antd";
-import { format } from 'date-fns';
+import { format, toDate } from 'date-fns';
 import Images from "./Images"
 // Tab Panel
 const TabPanel = ({ children, value, index }) => (
@@ -87,7 +87,7 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
     
     const handleSubmit = async (e) => {
       e.preventDefault();
-      
+      const curr = new Date();
       try {
         // Dispatch action to set loading state to true
         dispatch(SetLoader(true));
@@ -106,7 +106,7 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
         ) {
           message.error("Please fill all the fields of the form");
           return;
-        }else if(formData.startDate > formData.endDate){
+        }else if(formData.startDate > formData.endDate && formData.startDate > curr && formData.endDate > curr){
           message.error("Please mention the proper Start Date and End Date");
           return;
         }
@@ -122,6 +122,7 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
         
         console.log("Selected Crdeit: ", selectedCredit);
         if(selectedCredit){
+           // Edit Form
            console.log("Sending fetch request", formDataWithUser);
            const res = await fetch(`/edit-credit-forms/${selectedCredit._id}`, {
             method: "PUT",
@@ -143,7 +144,7 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
             message.error('Error updating the form. Please try again.');
            }  
         }else{
-          // Send a POST request to the backend
+          // Add new form
           const res = await fetch("/credit-forms", {
             method: "POST",
             headers: {
@@ -152,9 +153,8 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
             },
             body: JSON.stringify(formDataWithUser),
           });
-  
           dispatch(SetLoader(false));
-  
+          
           if(res.ok){
             const data = await res.json();
             console.log(data); 
@@ -194,7 +194,6 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
         ...selectedCredit
       }));
       setActiveTab(0);
-      setIamgeTabEnabled(true); // Enable the image tab when in edit mode
     }
   }, [selectedCredit, editMode]);
   return (

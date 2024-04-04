@@ -49,7 +49,7 @@ const Register = () => {
       message.error("Please select an image to upload");
       return;
     }
-
+    dispatch(SetLoader(true));
     const formData = new FormData();
     formData.append("file", profileImage);
     formData.append("upload_preset", "ksd1a115"); // Replace "your_upload_preset" with your Cloudinary upload preset
@@ -65,6 +65,8 @@ const Register = () => {
           ...prevState,
           imageUrl: data.secure_url,
         }));
+        dispatch(SetLoader(false));
+        console.log(data);
         message.success("Image uploaded successfully!");
       } else {
         message.error("Failed to upload image");

@@ -12,6 +12,7 @@ import imageSrc from '../images/wallpaper.gif';
 const Home = () => {
   const { logindata, setLoginData } = useContext(LoginContext);
   const [forms, setForms] = useState([]);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.users);
@@ -28,6 +29,13 @@ const Home = () => {
           Authorization: token,
         },
       });
+      // const imgresponse = await fetch(`/get-profile-image`, {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: token,
+      //   },
+      // });
       dispatch(SetLoader(false))
       const data = await response.json();
       if (response.ok) {
@@ -37,6 +45,10 @@ const Home = () => {
           return sellBeforeDate >= curr;
         });
         setForms(filteredForms);
+        // if(imgresponse.ok){
+        //   console.log("image is here", imgresponse);
+        //   setprofImage(imgresponse.body)
+        // }
       } else {
         throw new Error(data.message || 'Failed to fetch data');
       }
@@ -63,22 +75,27 @@ const Home = () => {
                 onClick={() => navigate(`/sell-credit/${form._id}`)}
               >
                 <div className="relative overflow-hidden">
-                  {form.images && form.images.length > 0 ? (
-                    <img src={form.images[0]} className="w-full h-48 object-cover" alt="Credit form" />
+                  {form.user.profilePicture ? (
+                    <img src={form.user.profilePicture} className="w-full h-full object-cover" alt="Profile" />
                   ) : (
-                    <div className="w-full h-48 flex items-center justify-center bg-gray-200">No image available</div>
+                  //  <div className="w-full h-full flex items-center justify-center bg-gray-200">No image available</div>
+                    <img src={form.user.profilePicture} className="w-full h-full object-cover" alt="Profile" />
                   )}
+                  
+                
+                </div>
+                <div className="p-5">
+                  
                   <div className="absolute bottom-0 left-0 bg-white px-4 py-2">
                     <CountdownTimer targetDate={form.sellBeforeDate} />
                   </div>
+                  
                 </div>
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold mb-2">{form.user.fname}</h2>
+                <h2 className="text-xl font-semibold mb-2">{form.user.fname}</h2>
                   <div className="flex items-center text-green-700">
                     <i className="ri-hand-coin-fill mr-2"></i>
-                    <span className="text-xl font-semibold">{form.sellCredits}</span>
+                    <span className="text-xl font-semibold">Carbon Credits: {form.sellCredits}</span>
                   </div>
-                </div>
               </div>
             ))}
         </div>

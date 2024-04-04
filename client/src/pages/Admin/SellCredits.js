@@ -6,7 +6,6 @@ import { SetLoader } from "../../redux/loadersSlice";
 
 function SellCredits() {
     const [sellCreditsForm, setSellCreditsForm] = useState([]);
-  
     const dispatch = useDispatch();
   
     const columns = [

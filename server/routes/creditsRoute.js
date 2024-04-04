@@ -114,10 +114,12 @@ router.put("/update-credits-status", authenticate, async(req, res) => {
 router.get("/get-reward-credits-user", authenticate, async(req, res) => {
     const user = req.rootUser;
     const reward_credits = user.rewardCredits;
+    const carbon_credits = user.credits;
     try{
       res.send({
         success: true,
         reward_credits,
+        carbon_credits,
       });
     }catch(error){
       res.send({

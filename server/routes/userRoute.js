@@ -6,38 +6,31 @@ const authenticate = require("../middleware/authenticate");
 
 // for user registration
 router.post("/register", async (req, res) => {
-  const { fname, email, password, cpassword } = req.body;
+  const { fname, email, password, cpassword, profilePicture } = req.body;
   if (!fname || !email || !password || !cpassword) {
-    res.status(422).json({ error: "fill all the details" });
+    return res.status(422).json({ error: "fill all the details" });
   }
   try {
-    // check if user exists
     const preuser = await userdb.findOne({ email: email });
     if (preuser) {
-      res.status(422).json({ error: "This Email is Already Exist" });
+      return res.status(422).json({ error: "This Email is Already Exist" });
     } else if (password !== cpassword) {
-      res
-        .status(422)
-        .json({ error: "Password and Confirm Password not match" });
+      return res.status(422).json({ error: "Password and Confirm Password not match" });
     } else {
-      // creating new user
       const finalUser = new userdb({
         fname,
         email,
         password,
         cpassword,
+        profilePicture
       });
-
-      // 10 points as reward upon registering
       finalUser.rewardCredits = 10;
-
       const storeData = await finalUser.save();
-      //console.log(storeData);
-      res.status(201).json({ status: 201, storeData });
+      return res.status(201).json({ status: 201, storeData });
     }
   } catch (error) {
-    res.status(422).json(error);
     console.log("catch error", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -136,6 +129,41 @@ router.put("/update-user-status/:id", authenticate, async (req, res) => {
       message: "User status updated successfully",
     });
   } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// get profile image
+router.get("/get-profile-image", authenticate, async (req, res) => {
+  try{
+    const user = req.rootUser;
+    const profImg = user.profilePicture;
+    console.log("user", user);
+    console.log("proooooo", profImg);
+    res.send({
+      success: true,
+      profImg
+    });
+  }catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+router.get("/get-admin-id", authenticate, async (req, res) => {
+  try{
+    const user = await userdb.findOne({role:"admin"}, {_id:1});
+    const adminUserId = user ? user._id : null;
+    res.send({
+      success: true,
+      adminUserId
+    });
+  }catch(error){
     res.send({
       success: false,
       message: error.message,
