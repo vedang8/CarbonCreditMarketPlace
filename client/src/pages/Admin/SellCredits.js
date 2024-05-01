@@ -12,6 +12,7 @@ function SellCredits() {
       {
         title: "Sender's Name",
         dataIndex: "senderName",
+        
         render: (_, record) => {
           return record.user ? record.user.fname : "";
         },
@@ -19,32 +20,41 @@ function SellCredits() {
       {
         title: "Carbon Credits",
         dataIndex: "sellCredits",
+        style: { color: "#0047ab" },
       },
       {
         title: "Bidding Deadline",
         dataIndex: "sellBeforeDate",
         render: (text, record) =>
           moment(record.sellBeforeDate).format("DD-MM-YYYY hh:mm A"),
+          style: { color: "#333333" },
       },
       {
         title: "Selling Status",
         dataIndex: "selling_status",
-        render: (text, record) => {
-          return record.selling_status.toUpperCase();
-        },
+        render: (text, record) => (
+          <span style={{ color: record.selling_status === 'Sold' ? '#FF0000' : (record.selling_status === 'Pending' ? '#FFA500' : '#000000') }}>
+            {record.selling_status.toUpperCase()}
+          </span>
+        ),
       },
       {
         title: "Status",
         dataIndex: "status",
-        render: (text, record) => {
-          return record.status.toUpperCase();
-        },
+        render: (text, record) => (
+          <span style={{ color: record.status === 'Approved' ? '#008000' : (record.status === 'pending' ? '#FFA500' : '#FF0000') }}>
+            {record.status.toUpperCase()}
+          </span>
+        ),
       },
       {
         title: "Added On",
         dataIndex: "createdAt",
-        render: (text, record) =>
-          moment(record.createdAt).format("DD-MM-YYYY hh:mm A"),
+        render: (text, record) => (
+          <span style={{ color: '#888' }}>
+            {moment(record.createdAt).format("DD-MM-YYYY hh:mm A")}
+          </span>
+        ),
       },
       {
         title: "Action",
@@ -55,6 +65,7 @@ function SellCredits() {
             <div className="flex gap-5">
               {status === "pending" && (
                 <span
+                  style={{ color: "#008000" }} 
                   className="underline cursor-pointer"
                   onClick={() => onStatusUpdate(_id, "Approved")}
                 >
@@ -63,6 +74,7 @@ function SellCredits() {
               )}
               {status === "pending" && (
                 <span
+                  style={{ color: "#FF0000" }} 
                   className="underline cursor-pointer"
                   onClick={() => onStatusUpdate(_id, "Rejected")}
                 >
@@ -71,6 +83,7 @@ function SellCredits() {
               )}
               {status === "Approved" && (
                 <span
+                  style={{ color: "#FF0000" }} 
                   className="underline cursor-pointer"
                   onClick={() => onStatusUpdate(_id, "Blocked")}
                 >
@@ -79,6 +92,7 @@ function SellCredits() {
               )}
               {status === "Blocked" && (
                 <span
+                  style={{ color: "#008000" }} 
                   className="underline cursor-pointer"
                   onClick={() => onStatusUpdate(_id, "Approved")}
                 >
