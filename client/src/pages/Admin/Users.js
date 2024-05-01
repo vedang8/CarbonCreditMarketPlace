@@ -13,41 +13,53 @@ function Users() {
     {
       title: "Name",
       dataIndex: "fname",
+      align: "center",
+      style: { color: "#203545" }, 
     },
     {
       title: "Email",
       dataIndex: "email",
+      align: "center",
+      style: { color: "#000000" }, // Black text color
     },
     {
       title: "Role",
       dataIndex: "role",
-      render: (text, record) => {
-        return record.role.toUpperCase();
-      },
+      align: "center",
+      render: (text, record) => (
+        <span style={{ color: record.role === 'admin' ? '#FFFFFF' : '#000000', backgroundColor: record.role === 'admin' ? '#6B8EFA' : '#F2F2F2', padding: '4px 8px', borderRadius: '4px' }}>
+          {record.role.toUpperCase()}
+        </span>
+      ),
     },
     {
       title: "Created At",
       dataIndex: "createdAt",
-      render: (createdAt) =>
-        moment(createdAt).format("DD-MM-YYYY hh:mm A"),
+      align: "center",
+      render: (createdAt) => (
+        <span style={{ color: "#888" }}>{moment(createdAt).format("DD-MM-YYYY hh:mm A")}</span> // Dark gray text color
+      ),
     },
     {
       title: "Status",
       dataIndex: "status",
-      render: (text, record) => {
-        return record.status.toUpperCase();
-      },
+      align: "center",
+      render: (text, record) => (
+        <span style={{ color: record.status === 'active' ? '#008000' : '#FF0000' }}>{record.status.toUpperCase()}</span> // Green for active, red for blocked
+      ),
     },
     {
       title: "Action",
       dataIndex: "action",
+      align: "center",
       render: (text, record) => {
         const { status, _id } = record;
         return (
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-center">
             {status === "active" && (
               <span
                 className="underline cursor-pointer"
+                style={{ color: "#FF0000" }} 
                 onClick={() => onStatusUpdate(_id, "blocked")}
               >
                 Block
@@ -56,6 +68,7 @@ function Users() {
             {status === "blocked" && (
               <span
                 className="underline cursor-pointer"
+                style={{ color: "#008000" }} 
                 onClick={() => onStatusUpdate(_id, "active")}
               >
                 Unblock
