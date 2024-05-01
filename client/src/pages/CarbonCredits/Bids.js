@@ -79,7 +79,7 @@ function Bids({ showBidsModal, setShowBidsModal, selectedSellCredit }) {
       // notify buyer for the credits
       const notify1 = {
         title: "Congratulations! 🎉",
-        message: `You have earned ${selectedSellCredit.sellCredits} Carbon Credits from ${selectedSellCredit.user.fname}`,
+        message: `You have earned ${selectedSellCredit.sellCredits} Carbon Credits from ${selectedSellCredit.seller.fname}`,
         user: id,
         onClick: `/profile`,
         read: false,

@@ -12,21 +12,44 @@ function Credits() {
     {
       title: "Sender's Name",
       dataIndex: "senderName",
-      render: (_, record) => {
-        return record.user ? record.user.fname : "";
-      },
+      render: (_, record) => (
+        <span style={{ color: '#203545' }}>
+          {record.user ? record.user.fname : ""}
+        </span>
+      ),
     },
     {
       title: "Project Name",
       dataIndex: "projectName",
+      render: (text) => (
+        <span
+          style={{
+            fontSize: "16px",
+            color: "#652A0E",
+            backgroundColor: "#FFF39A",
+          }}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "Start Date",
       dataIndex: "startDate",
+      render: (record) => {
+        return (
+          <span style={{ color: "blueviolet" }}>{new Date(record).toLocaleDateString()}</span>
+        );
+      }
     },
     {
       title: "End Date",
       dataIndex: "endDate",
+      render: (record) => {
+        return (
+          <span style={{ color: "red" }}>{new Date(record).toLocaleDateString()}</span>
+        );
+      }
     },
     {
       title: "Baseline Emission Amt",
@@ -58,8 +81,11 @@ function Credits() {
     {
       title: "Added On",
       dataIndex: "createdAt",
-      render: (text, record) =>
-        moment(record.createdAt).format("DD-MM-YYYY hh:mm A"),
+      render: (text, record) => (
+        <span style={{ color: '#888' }}>
+          {moment(record.createdAt).format("DD-MM-YYYY hh:mm A")}
+        </span>
+      ),
     },
     {
       title: "Action",

@@ -68,6 +68,17 @@ function Credits() {
     {
       title: "Project Name",
       dataIndex: "projectName",
+      render: (text) => (
+        <span
+          style={{
+            fontSize: "16px",
+            color: "#652A0E",
+            backgroundColor: "#FFF39A",
+          }}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "Project Type",
@@ -78,7 +89,7 @@ function Credits() {
       dataIndex: "startDate",
       render: (record) => {
         return (
-          <span>{new Date(record).toLocaleDateString()}</span>
+          <span style={{ color: "blueviolet" }}>{new Date(record).toLocaleDateString()}</span>
         );
       }
     },
@@ -87,7 +98,7 @@ function Credits() {
       dataIndex: "endDate",
       render: (record) => {
         return (
-          <span>{new Date(record).toLocaleDateString()}</span>
+          <span style={{ color: "red" }}>{new Date(record).toLocaleDateString()}</span>
         );
       }
     },
@@ -102,14 +113,29 @@ function Credits() {
     {
       title: "Trees",
       dataIndex: "numOfTrees",
+      render: (record) => {
+        return (
+          <span style={{ color: "darkgreen" }}>{record}</span>
+        );
+      }
     },
     {
       title: "Solar Panels",
       dataIndex: "numOfSolarPanels",
+      render: (record) => {
+        return (
+          <span style={{ color: "darkgreen" }}>{record}</span>
+        );
+      }
     },
     {
       title: "Electricity Consumption",
       dataIndex: "electricity",
+      render: (record) => {
+        return (
+          <span style={{ color: "darkgreen" }}>{record}</span>
+        );
+      }
     },
     {
       title: "Status",

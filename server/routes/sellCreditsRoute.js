@@ -9,6 +9,7 @@ const { uploadImageCloudinary } = require("../db/uploadClodinary");
 const userdb = require("../models/user");
 const creditdb = require("../models/credits");
 const { serialize } = require("v8");
+const Notification = require("../models/notification");
 
 // create a new sell credit form
 router.post("/sell-credit-forms", authenticate, async (req, res) => {
@@ -22,6 +23,18 @@ router.post("/sell-credit-forms", authenticate, async (req, res) => {
     await newForm.save();
     user.rewardCredits += 25;
     await user.save();
+    // send notification to admin
+    const admins = await userdb.find({ role: "admin" });
+    admins.forEach(async (admin) => {
+      const newNotification = new Notification({
+        user: admin._id,
+        message: `New Form added by ${user.fname}`,
+        title: "Carbon Credits Selling Form",
+        onClick: `/admin`,
+        read: false,
+      });
+      await newNotification.save();
+    });
     res.send({
       success: true,
       message: "Form Submitted Successfully",
@@ -39,8 +52,7 @@ router.get("/get-all-sell-credit-forms", authenticate, async (req, res) => {
   try {
     const forms = await sell_creditforms
       .find()
-      .populate("user", "fname")
-      .populate("user", "profilePicture")
+      .populate("user", "fname profilePicture")
       .sort({ createdAt: -1 });
     res.send({
       success: true,

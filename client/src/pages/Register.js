@@ -234,7 +234,7 @@ const Register = () => {
             <button className="btn" onClick={addUserdata}>
               Sign Up
             </button>
-            <p>
+            <p className="para">
               Already have an Account? <NavLink to="/login">Login</NavLink>
             </p>
           </form>
@@ -242,7 +242,6 @@ const Register = () => {
       </section>
       </div>
     </div>
-      
     </>
   );
 };

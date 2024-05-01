@@ -228,10 +228,17 @@ router.put(
   async (req, res) => {
     try {
       const { status } = req.body;
-      await CreditForm.findByIdAndUpdate(req.params.id, { status });
+      const updatedForm = await CreditForm.findByIdAndUpdate(req.params.id, { status });
       
       // send notification to user
-      
+      const newNotification = new Notification({
+        user: updatedForm.user,
+        message: `Your Generation Form has been ${status}`,
+        title: "Generation Status Updated",
+        onClick: `/profile`,
+        read: false,
+      });
+      await newNotification.save();
       res.send({
         success: true,
         message: "Form status updated Successfully",

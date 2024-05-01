@@ -17,12 +17,21 @@ function SellCredits() {
         },
       },
       {
-        title: "Credits",
+        title: "Carbon Credits",
         dataIndex: "sellCredits",
       },
       {
-        title: "date",
+        title: "Bidding Deadline",
         dataIndex: "sellBeforeDate",
+        render: (text, record) =>
+          moment(record.sellBeforeDate).format("DD-MM-YYYY hh:mm A"),
+      },
+      {
+        title: "Selling Status",
+        dataIndex: "selling_status",
+        render: (text, record) => {
+          return record.selling_status.toUpperCase();
+        },
       },
       {
         title: "Status",
