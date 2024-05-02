@@ -257,7 +257,7 @@ router.post("/generate-certificate/:id", authenticate, async (req, res) => {
   const user = req.rootUser;
   try {
     const creditForm = await genform.findById(req.params.id);
-    console.log("cccrreeddiittsss", creditForm);
+    //console.log("cccrreeddiittsss", creditForm);
     // Generate certificate PDF
     const pdfDoc = new PDFDocument();
     const certificatesDirectory = './certificates';
@@ -280,22 +280,13 @@ router.post("/generate-certificate/:id", authenticate, async (req, res) => {
 
     // Adding content to the PDF
     pdfDoc.fontSize(24).fillColor("#000").text("Carbon Credit Certificate", { align: "center" });
-
-    // Add separator line
-    // pdfDoc
-    //   .moveDown()
-    //   .strokeColor("#000")
-    //   .lineWidth(1)
-    //   .moveTo(50, pdfDoc.y)
-    //   .lineTo(550, pdfDoc.y)
-    //   .stroke();
     
     // Reset font size for regular text
     pdfDoc.font('Helvetica');
     pdfDoc.fontSize(16);
     pdfDoc.moveDown();
 
-    pdfDoc.text(`This certifies that ${creditForm.projectName}, a project initiated by ${creditForm.user.fname}, has successfully contributed to reducing carbon emissions in accordance with the principles of the Carbon Credit Marketplace.`);
+    pdfDoc.text(`This certifies that ${creditForm.projectName}, a project has successfully contributed to reducing carbon emissions in accordance with the principles of the Carbon Credit Marketplace.`);
     
     pdfDoc.moveDown();
     pdfDoc.fontSize(16).text(`Project Details:`);
@@ -328,7 +319,6 @@ router.post("/generate-certificate/:id", authenticate, async (req, res) => {
     pdfDoc.opacity(0.3).text('Confidential', 50, 50, { rotation: 45, opacity: 0.3 }); // Add a watermark text
     pdfDoc.moveDown();
     
-    pdfDoc.text(`${user.fname}`);
     // Finalize PDF
     pdfDoc.end();
 

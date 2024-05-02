@@ -49,7 +49,7 @@ const StyledTab = (props) => (
     sx={{
       color: props.$isSelected ? 'green' : 'inherit',
       '&.Mui-selected': {
-        color: 'green',
+        color: 'white',
       },
     }}
     {...props}
@@ -72,7 +72,7 @@ export default function Admin() {
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
-            TabIndicatorProps={{ style: { backgroundColor: 'green' } }}
+            TabIndicatorProps={{ style: { backgroundColor: 'white' } }}
           >
             <StyledTab label="Credit Forms" {...a11yProps(0)} $isSelected={value === 0} />
             <StyledTab label="Users" {...a11yProps(1)} $isSelected={value === 1} />

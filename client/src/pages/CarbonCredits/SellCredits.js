@@ -83,12 +83,16 @@ function SellCredits() {
     {
       title: "Selling Status",
       dataIndex: "selling_status",
-      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor: record.status === "rejected" ? "#FF7F50" :"greenyellow" }}>{text}</span>
+      render: (text, record) => <span style={{ color: record.selling_status === "Pending" ? "#FF7F50" :"#FF0000" }}>{record.selling_status.toUpperCase()}</span>
     },
     {
       title: "Status",
       dataIndex: "status",
-      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor: record.status === "rejected" ? "#FF7F50" :"greenyellow" }}>{text}</span>
+      render: (text, record) => (
+        <span style={{ color: record.status === 'Approved' ? '#008000' : (record.status === 'pending' ? '#FFA500' : '#FF0000') }}>
+          {record.status.toUpperCase()}
+        </span>
+      ),
     },
     {
       title: "Action",

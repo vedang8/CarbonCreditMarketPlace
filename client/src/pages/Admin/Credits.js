@@ -74,9 +74,11 @@ function Credits() {
     {
       title: "Status",
       dataIndex: "status",
-      render: (text, record) => {
-        return record.status.toUpperCase();
-      },
+      render: (text, record) => (
+        <span style={{ color: record.status === 'approved' ? '#008000' : (record.status === 'pending' ? '#FFA500' : '#FF0000') }}>
+          {record.status.toUpperCase()}
+        </span>
+      ),
     },
     {
       title: "Added On",
@@ -96,6 +98,7 @@ function Credits() {
           <div className="flex gap-5">
             {status === "pending" && (
               <span
+                style={{ color: "#008000" }}
                 className="underline cursor-pointer"
                 onClick={() => onStatusUpdate(_id, "approved")}
               >
@@ -104,6 +107,7 @@ function Credits() {
             )}
             {status === "pending" && (
               <span
+                style={{ color: "#FF0000" }} 
                 className="underline cursor-pointer"
                 onClick={() => onStatusUpdate(_id, "rejected")}
               >
@@ -112,6 +116,7 @@ function Credits() {
             )}
             {status === "approved" && (
               <span
+                style={{ color: "#FF0000" }}
                 className="underline cursor-pointer"
                 onClick={() => onStatusUpdate(_id, "blocked")}
               >
@@ -120,6 +125,7 @@ function Credits() {
             )}
             {status === "blocked" && (
               <span
+                style={{ color: "#008000" }}
                 className="underline cursor-pointer"
                 onClick={() => onStatusUpdate(_id, "approved")}
               >
@@ -181,7 +187,7 @@ function Credits() {
             },
           });
           if(res.ok){
-            const data1 = await response.json();
+            const data1 = await res.json();
             message.success(data1.message);
           }
         }

@@ -121,10 +121,6 @@ const SellCreditsForm = ({
           await getData();
           message.success(data.message);
           message.success("🪙25 Points are rewarded! 🎊");
-          
-
-
-
           setShowSellCreditsForm(false);
         } else {
           message.error("Error submitting the form. Please try again.");

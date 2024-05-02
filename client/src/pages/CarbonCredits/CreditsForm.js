@@ -106,12 +106,10 @@ const CreditsForm = ({ setShowCreditsForm, selectedCredit, getData, editMode, ha
         ) {
           message.error("Please fill all the fields of the form");
           return;
-        }else if(formData.startDate > formData.endDate && formData.startDate > curr && formData.endDate > curr){
+        }else if(formData.startDate > formData.endDate || (formData.startDate < curr && formData.endDate < curr)){
           message.error("Please mention the proper Start Date and End Date");
           return;
         }
-        
-        
         // Get the authorization token from the request headers
         const token = localStorage.getItem("usersdatatoken"); // Assuming you store the token in local storage
 

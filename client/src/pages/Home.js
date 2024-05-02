@@ -29,13 +29,7 @@ const Home = () => {
           Authorization: token,
         },
       });
-      // const imgresponse = await fetch(`/get-profile-image`, {
-      //   method: "GET",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: token,
-      //   },
-      // });
+      
       dispatch(SetLoader(false))
       const data = await response.json();
       if (response.ok) {
@@ -45,10 +39,6 @@ const Home = () => {
           return sellBeforeDate >= curr;
         });
         setForms(filteredForms);
-        // if(imgresponse.ok){
-        //   console.log("image is here", imgresponse);
-        //   setprofImage(imgresponse.body)
-        // }
       } else {
         throw new Error(data.message || 'Failed to fetch data');
       }
@@ -76,20 +66,16 @@ const Home = () => {
               >
                 <div className="relative overflow-hidden">
                   {form.user.profilePicture ? (
-                    <img src={form.user.profilePicture} className="w-full h-full object-cover" alt="Profile" />
+                    <img src={form.user.profilePicture} className="w-full h-full object-cover cursor-pointer" alt="Profile" />
                   ) : (
-                  //  <div className="w-full h-full flex items-center justify-center bg-gray-200">No image available</div>
                     <img src={form.user.profilePicture} className="w-full h-full object-cover" alt="Profile" />
                   )}
                   
-                
                 </div>
                 <div className="p-5">
-                  
                   <div className="absolute bottom-0 left-0 bg-white px-4 py-2">
                     <CountdownTimer targetDate={form.sellBeforeDate} />
                   </div>
-                  
                 </div>
                 <h2 className="text-xl font-semibold mb-2">{form.user.fname}</h2>
                   <div className="flex items-center text-green-700">

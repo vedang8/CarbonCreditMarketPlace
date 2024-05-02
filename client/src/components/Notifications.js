@@ -25,20 +25,22 @@ function Notifications({
           Authorization: token,
         },
       });
-      
+  
       dispatch(SetLoader(false));
       if (response.ok) {
-        message.success(response.message);
+        const data = await response.json(); // Extract message from response body
+        message.success(data.message); // Use data.message
         reloadNotifications();
       } else {
-        throw new Error(response.message);
+        const data = await response.json(); // Extract error message from response body
+        throw new Error(data.message); // Throw error with error message
       }
     } catch (error) {
       dispatch(SetLoader(false));
-      message.error(error.message);
+      message.error(error.message || "An error occurred"); // Use error.message if present, else provide a generic error message
     }
   };
-
+  
   return (
     <Modal
       title="Notifications"
