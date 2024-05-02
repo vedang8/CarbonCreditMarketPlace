@@ -90,11 +90,11 @@ function SellCreditsInfo({selectedSellCredit}) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-semibold">Carbon Credits:</span>
-                <span className="bg-yellow-500 text-white py-1 px-2 rounded">🪙 {sellCredit?.data?.sellCredits}</span>
+                <span className="bg-yellow-500 text-white py-1 px-2 rounded"> 🟢{sellCredit?.data?.sellCredits}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-semibold">Sell Before Date:</span>
-                <span>{sellCredit?.data?.sellBeforeDate}</span>
+                <span>{new Date(sellCredit?.data?.sellBeforeDate).toLocaleDateString()}</span>
               </div>
             </div>
             <Divider />

@@ -62,14 +62,29 @@ function Credits() {
     {
       title: "Trees",
       dataIndex: "numOfTrees",
+      render: (record) => {
+        return (
+          <span style={{ color: "darkgreen" }}>{record}</span>
+        );
+      }
     },
     {
       title: "Solar Panels",
       dataIndex: "numOfSolarPanels",
+      render: (record) => {
+        return (
+          <span style={{ color: "darkgreen" }}>{record}</span>
+        );
+      }
     },
     {
       title: "Electricity Consumption",
       dataIndex: "electricity",
+      render: (record) => {
+        return (
+          <span style={{ color: "darkgreen" }}>{record} kWh</span>
+        );
+      }
     },
     {
       title: "Status",

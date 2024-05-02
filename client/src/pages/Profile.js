@@ -7,6 +7,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Credits from "./CarbonCredits/Credits";
 import Carbon_Credits from "./CarbonCredits/CCredits";
 import SellCredits from "./CarbonCredits/SellCredits";
+import UserBids from "./CarbonCredits/UserBids";
 
 function CustomTabPanel({ children, value, index }) {
   return (
@@ -83,7 +84,7 @@ export default function Profile() {
               rewardCredits < 100 ? "Insufficient reward credits" : null
             }
           />
-          <Tab label="Bids" />
+          <Tab label="My Bids" />
         </Tabs>
         <div className="flex-grow p-4">
           <CustomTabPanel value={value} index={0}>
@@ -96,7 +97,7 @@ export default function Profile() {
             <SellCredits />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
-            Bids
+            <UserBids/>
           </CustomTabPanel>
         </div>
       </div>
