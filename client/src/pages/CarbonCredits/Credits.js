@@ -83,6 +83,16 @@ function Credits() {
     {
       title: "Project Type",
       dataIndex: "projectType",
+      render: (text) => (
+        <span
+          style={{
+            color: "#C71585",
+            backgroundColor: "",
+          }}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: "Start Date",
@@ -133,14 +143,16 @@ function Credits() {
       dataIndex: "electricity",
       render: (record) => {
         return (
-          <span style={{ color: "darkgreen" }}>{record}</span>
+          <span style={{ color: "darkgreen" }}>{record} kWh</span>
         );
       }
     },
     {
       title: "Status",
       dataIndex: "status",
-      render: (text, record) => <span style={{ fontSize: '16px', backgroundColor: record.status === "pending" ? "orange" : record.status === "rejected" || record.status === "blocked" ? "#FF7F50" :"greenyellow" }}>{text}</span>
+      render: (text, record) => (
+        <span style={{ color: record.status === 'approved' ? '#008000' : record.status === 'rejected' ? '#FF0000' : "#FFA500" }}>{record.status.toUpperCase()}</span> // Green for approved, red for rejected
+      ),
     },
     {
       title: "Action",
@@ -149,13 +161,15 @@ function Credits() {
         return (
           <div className="flex gap-5">
             <i
-              className="ri-delete-bin-line"
+              style={{ color: "#FF0000" }} 
+              className="ri-delete-bin-line cursor-pointer"
               onClick={() => {
                 handleDeleteClick(record);
               }}
             ></i>
             <i
-              className="ri-pencil-line"
+              style={{ color: "#007bff" }} 
+              className="ri-pencil-line cursor-pointer"
               onClick={() => {
                 handleEditClick(record);
               }}

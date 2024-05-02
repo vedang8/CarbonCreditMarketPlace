@@ -134,7 +134,7 @@ function Carbon_Credits() {
       ),
     },
     {
-      title: "Credit Amount",
+      title: "Carbon Credits",
       dataIndex: "amount",
       key: "amount",
     },
@@ -143,7 +143,7 @@ function Carbon_Credits() {
       dataIndex: "status",
       key: "status",
       render: (text, record) => (
-        record.status
+        <span style={{ color: record.status === 'active' ? '#008000' : '#FF0000' }}>{record.status.toUpperCase()}</span> // Green for active, red for blocked
       ),
     },
     {
