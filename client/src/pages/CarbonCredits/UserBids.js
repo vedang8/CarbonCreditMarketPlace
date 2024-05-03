@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { message, Table} from "antd";
 import { useDispatch } from "react-redux";
 import { SetLoader } from "../../redux/loadersSlice";
-import moment from "moment";
 
 function UserBids() {
   const [bidsData, setBidsData] = useState([]); 
@@ -39,6 +38,11 @@ function UserBids() {
       render: (seller) => seller.fname,
     },
     {
+        title: "Selling Carbon Credits",
+        dataIndex: "sellCredits",
+        render: (sellCredits) => sellCredits?.sellCredits,
+    },
+    {
       title: "Bid Amount",
       dataIndex: "bidAmount",
     },
@@ -46,9 +50,9 @@ function UserBids() {
       title: "Message",
       dataIndex: "message",
     },
-    {
-      title: "Actions",
-    },
+    // {
+    //   title: "Actions",
+    // },
   ];
 
   useEffect(() => {

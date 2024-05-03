@@ -65,4 +65,16 @@ router.post("/get-particular-all-bids", authenticate, async (req, res) => {
   }
 });
 
+router.post("/get-all-user-bids", authenticate, async(req, res) => {
+  const user = req.rootUser;
+  let filter = {};
+  filter.buyer = user._id;
+  try{
+    const bids = await Bid.find(filter).populate("seller").populate("sellCredits").sort({ createdAt: -1 });
+    console.log("bbbbb", bids);
+    res.send({ success: true, data: bids });
+  }catch(error){
+    res.send({success: false, message: error.message});
+  }
+});
 module.exports = router;
