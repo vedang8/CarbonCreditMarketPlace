@@ -9,6 +9,8 @@ module.exports = (io) => {
     try {
       const newNotification = new Notification(req.body);
       await newNotification.save();
+      io.emit("newNotification", newNotification);      // emits new notification
+
       res.send({
         success: true,
         message: "Notification added successfully",

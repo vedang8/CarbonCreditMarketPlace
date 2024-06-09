@@ -8,7 +8,12 @@ const http = require("http");
 require("./db/conn");
 const port = 8009;
 const server = http.createServer(app); // Create an HTTP server
-const io = socketIo(server); // Initialize Socket.io
+const io = socketIo(server, {
+    cors: {
+        origin: "http://localhost:3000", // Allow requests from this origin
+        methods: ["GET", "POST"]
+    }
+}); // Initialize Socket.io
 
 app.use(express.json());
 app.use(cookieParser());

@@ -11,6 +11,7 @@ import { Badge, Avatar, message } from "antd";
 import SellCreditsInfo from "./SellCreditsInfo/index.js";
 import Notifications from "../components/Notifications.js";
 import backgroundImage from "../images/wallpaper.gif";
+import io from "socket.io-client";
 
 const Dashboard = () => {
   const { logindata, setLoginData } = useContext(LoginContext);
@@ -19,6 +20,7 @@ const Dashboard = () => {
   const { user } = useSelector((state) => state.users);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const socket = io("http://localhost:8009", { transports: ["websocket", "polling", "flashsocket"] });
 
   const DashboardValid = async () => {
     dispatch(SetLoader(true));
@@ -128,6 +130,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     DashboardValid();
+    socket.on("newNotification", (notification) => {
+      setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (
