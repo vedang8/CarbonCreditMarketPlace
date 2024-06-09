@@ -4,8 +4,8 @@
   "main": "server.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "npm start --prefix server",
-    "client": "npm start --prefix client"
+    "server": "cd server && npm start",
+    "client": "cd client && npm start"
   },
   "dependencies": {
     "@types/react": "^18.2.48",
