@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "start": "node app.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "prod": "NODE_ENV=production nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +15,7 @@
   "dependencies": {
     "@stripe/stripe-js": "^3.0.7",
     "bcryptjs": "^2.4.3",
+    "compression": "!1.7.4",
     "cloudinary": "^2.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

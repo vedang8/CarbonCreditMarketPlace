@@ -28,6 +28,8 @@ const sellCreditsRoute = require("./routes/sellCreditsRoute");
 const bidsRoute = require("./routes/bidsRoute");
 const notificationRoute = require("./routes/notificationRoute");
 
+const path = require("path");
+app.use(express.static(path.join(__dirname, "build")));
 app.use(userRoute);
 app.use(creditsFormRoute);
 app.use(creditsRoute);

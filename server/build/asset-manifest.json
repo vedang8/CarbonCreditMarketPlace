@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/static/css/main.63a090a5.css",
+    "main.js": "/static/js/main.76cef23a.js",
+    "static/media/wallpaper.gif": "/static/media/wallpaper.18c53688164f7ca7a620.gif",
+    "static/media/carbontrading.jpg": "/static/media/carbontrading.d306919945d930c72917.jpg",
+    "index.html": "/index.html",
+    "main.63a090a5.css.map": "/static/css/main.63a090a5.css.map",
+    "main.76cef23a.js.map": "/static/js/main.76cef23a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.63a090a5.css",
+    "static/js/main.76cef23a.js"
+  ]
+}
