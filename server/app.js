@@ -33,6 +33,15 @@ app.use(sellCreditsRoute);
 app.use(bidsRoute);
 app.use(notificationRoute);
 
+// deployment config
+const path = require("path");
+__dirname = path.resolve();
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname, "/client/build")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+    });
+}
 
 server.listen(port, ()=>{
     console.log(`server start at port no: ${port}`);
