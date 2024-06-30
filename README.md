@@ -24,4 +24,17 @@ Welcome to the **Carbon Credit Market-Place!** This platform empowers users to g
 - **Real-Time**: Web Sockets
 - **Image Uploads**: Cloudinary
 
+## 🎥 Demo
+
+Check out my [YouTube demo video](https://www.youtube.com/watch?v=vLf4bWRAH-4) to see the Carbon Credit Market-Place in action!
+
+## 🌐 Deployment
+
+Experience the live application [Carbon Credit MarketPlace](https://carboncreditmarketplace-6.onrender.com/login).
+
+---
+
+Enjoy using the Carbon Credit Market-Place! 🌱💚
+
+
 
