@@ -1,6 +1,8 @@
 # 🌍 Carbon Credit Market-Place
 
-Welcome to the Carbon Credit Market-Place! This platform empowers users to generate, manage, and trade carbon credits in real-time. Built with the MERN stack, this project features JWT authentication, real-time Web Sockets, Cloudinary integration, and much more!
+Welcome to the **Carbon Credit Market-Place!** This platform empowers users to generate, manage, and trade carbon credits in real-time. Built with the MERN stack, this project features JWT authentication, real-time Web Sockets, Cloudinary integration, and much more!
+
+![image](https://github.com/vedang8/CarbonCreditMarketPlace/assets/108025619/b5fa8fc8-c805-4c2c-824b-cf50fc7d6cec)
 
 ## 🚀 Features
 
